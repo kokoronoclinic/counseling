@@ -484,12 +484,17 @@
     const known = ["渡辺","笈川","市毛","森本"];
     // 既知の担当者名がある場合は「先生」を付けて返す
     if (known.includes(ans.q3)) return `${ans.q3}先生`;
-    // その他に自由記載がある場合も同様に「先生」を付ける
+    // 自由記載がある場合は、既に「先生」「医」などが含まれていればそのまま、それ以外は「先生」を付ける
     if (ans.q3 === "その他" && ans.q3_other && ans.q3_other.trim()){
-      return `${ans.q3_other.trim()}先生`;
+      const trimmed = ans.q3_other.trim();
+      // 「先生」「医」「医師」で終わっている場合は付加しない
+      if (trimmed.endsWith("先生") || trimmed.endsWith("医") || trimmed.endsWith("医師")) {
+        return trimmed;
+      }
+      return `${trimmed}先生`;
     }
-    // 氏名が不明な場合は「担当の先生」を用いる
-    return "担当の先生";
+    // 氏名が不明な場合は「担当医」を用いる
+    return "担当医";
   }
   function buildSystemPrompt(ans) {
     const counselor = getDoctorName(ans);
@@ -508,8 +513,8 @@
       `- 構成は時系列（利用のきっかけ→探した経緯→選んだ理由→面談の様子→良かった点→総合コメント）\n` +
       `- 「WAIS-Ⅳ」や「TEG3」など検査名、また「カウンセリング」が目的として選択されている場合は、症状が続いたという表現ではなく、検査やカウンセリングを受けるという自然な表現に置き換える\n` +
       `- 一文目には必ず施設名「${clinic}」を含める（書き出しの文の形は自由）\n` +
-      // カウンセラーではなく先生という表現を使用する
-      `- 先生の表記は：${counselor === "担当の先生" ? "氏名が不明なので「担当の先生」を用いる" : `本文中に一度は先生名「${counselor}」を明記する`} ` + `\n` +
+      // 医師の表記は：名前が不明な場合は「担当医」、それ以外は先生名をそのまま用いる
+      `- 医師の表記は：${counselor === "担当医" ? "氏名が不明なので「担当医」を用いる" : `本文中に一度は「${counselor}」を明記する`} ` + `\n` +
       (periodPhrase ? `- 通所期間は次の文面を本文に必ず一度含める：「${periodPhrase}」\n` : "") +
       (seoRule ? seoRule + "\n" : "") +
       `- SEO語句を盛り込む際は「〜を中心に情報を探した」「〜を意識して」といった表現を使わず、自然な文脈で活用する\n` +
@@ -581,7 +586,7 @@
     return t;
   }
   function generateReviewLocally(ans) {
-    const deptList = ["困った事があり", "悩み相談", "心理相談"];
+    const deptList = ["カウンセリングルーム", "メンタルヘルスサービス", "心理相談室"];
     const dept = deptList[Math.floor(Math.random() * deptList.length)];
     // 動機の文章を柔軟に生成する。症状が続いた場合は「〜が続き」、検査やカウンセリングが目的の場合はそれぞれ「〜の検査を受けるため」「カウンセリングを受けるため」と表現する
     let motive = "心身の不調が続いたため";
