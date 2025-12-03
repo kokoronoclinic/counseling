@@ -384,8 +384,8 @@
             <div class="row">
               <label class="chip"><input type="checkbox" name="q5" value="良く聞いてくれた">良く聞いてくれた</label>
               <label class="chip"><input type="checkbox" name="q5" value="WEB予約が便利">WEB予約が便利</label>
-              <label class="chip"><input type="checkbox" name="q5" value="キャッシュレス決済">キャッシュレス決済</label>
-              <label class="chip"><input type="checkbox" name="q5" value="武蔵小杉駅近く">武蔵小杉駅近く</label>
+              <label class="chip"><input type="checkbox" name="q5" value="Cashless決済が便利">Cashless決済が便利</label>
+              <label class="chip"><input type="checkbox" name="q5" value="駅近くで便利">駅近くで便利</label>
               <!-- 以下の選択肢を修正：検査・カウンセリングを削除し、新たに利便性に関する項目を追加 -->
               <label class="chip"><input type="checkbox" name="q5" value="待ち時間が短い">待ち時間が短い</label>
               <label class="chip"><input type="checkbox" name="q5" value="説明が分かりやすい">説明が分かりやすい</label>
@@ -539,7 +539,7 @@
   const toggle = (el, show) => { if (el) el.style.display = show ? "" : "none"; };
   function filterPositives(items) {
     const positives = new Set([
-      "良く聞いてくれた","WEB予約が便利","キャッシュレス決済","武蔵小杉駅近く",
+      "良く聞いてくれた","WEB予約が便利","Cashless決済が便利","駅近くで便利",
       "TEG3の検査","WAIS-Ⅳの検査","カウンセリング"
     ]);
     return (items||[]).filter(x => positives.has(x));
@@ -555,8 +555,8 @@
     const expandMap = {
       "良く聞いてくれた": "落ち着いて話せる雰囲気で、こちらのペースに合わせて進めてくださいました。些細な不安にも耳を傾けてくれて、納得いくまで相談できました。",
       "WEB予約が便利": "WEB予約による手続きが簡単で、都合に合わせて利用しやすかったです。",
-      "キャッシュレス決済": "キャッシュレス決済が使用でき、会計がスムーズで手間がかかりませんでした。",
-      "武蔵小杉駅近く": "武蔵小杉駅が近いので、継続利用もしやすいと感じます。",
+      "Cashless決済が便利": "キャッシュレス決済が使用でき、会計がスムーズで手間がかかりませんでした。",
+      "駅近くで便利": "武蔵小杉駅が近いので、継続利用もしやすいと感じます。",
       "TEG3の検査": "TEG3の心理検査も受けられ、状態の理解が深まりました。",
       "WAIS-Ⅳの検査": "WAIS-Ⅳの検査を通じて自分の特性を知ることができ、有意義でした。",
       "カウンセリング": "カウンセリングが丁寧で、安心して話をすることができました。"
