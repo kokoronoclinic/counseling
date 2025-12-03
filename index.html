@@ -1137,6 +1137,7 @@ ${seoRule ? seoRule : ""}
         e.preventDefault();
         const ans = collectAnswers(e.currentTarget);
         renderSummary(ans);
+        if (typeof showLoading === "function") showLoading();
         try {
           let review = await (async () => {
             if (
@@ -1172,7 +1173,6 @@ ${seoRule ? seoRule : ""}
           out.disabled = false;
           out.style.pointerEvents = "auto";
           out.style.caretColor = "#111827";
-          if (typeof hideLoading === "function") hideLoading();
           updateGoogleLink();
           showView("view-positive");
           if (typeof autosizeTextarea === "function") autosizeTextarea(out);
@@ -1180,6 +1180,8 @@ ${seoRule ? seoRule : ""}
         } catch (err) {
           console.error(err);
           showView("view-thanks");
+        } finally {
+          if (typeof hideLoading === "function") hideLoading();
         }
       });
 
@@ -1266,9 +1268,10 @@ ${seoRule ? seoRule : ""}
         document.body.setAttribute("aria-busy", "true");
         document.body.style.pointerEvents = "none";
         document.body.style.touchAction = "none";
-        const start = performance.now();
+        const start = performance.now ? performance.now() : Date.now();
         timer = setInterval(() => {
-          const elapsedMs = performance.now() - start;
+          const now = performance.now ? performance.now() : Date.now();
+          const elapsedMs = now - start;
           const ideal = (elapsedMs / EXPECTED_MS) * 100;
           const target = Math.min(HOLD_AT, Math.floor(ideal));
           if (target > progress) setProgress(target);
@@ -1300,26 +1303,6 @@ ${seoRule ? seoRule : ""}
           setProgress(0);
         }, 220);
       };
-      const _fetch = window.fetch.bind(window);
-      window.fetch = async function (input, init) {
-        const url = typeof input === "string" ? input : input && input.url;
-        const method =
-          (init && (init.method ?? init.options?.method) ?? "GET").toUpperCase();
-        const isTarget =
-          typeof appConfig !== "undefined" &&
-          appConfig.ai.mode === "endpoint" &&
-          !!appConfig.ai.endpoint &&
-          url === appConfig.ai.endpoint &&
-          method === "POST";
-        if (!isTarget) return _fetch(input, init);
-        try {
-          window.showLoading();
-          const res = await _fetch(input, init);
-          return res;
-        } finally {
-          window.hideLoading();
-        }
-      };
     })();
   </script>
 
@@ -1340,7 +1323,7 @@ ${seoRule ? seoRule : ""}
         aria-valuemax="100"
         aria-valuenow="0"
       >
-      <div id="loadingBar" class="bar"></div>
+        <div id="loadingBar" class="bar"></div>
       </div>
       <div class="loading-sub">
         <span id="loadingNote">通常10秒ほどかかります。このままお待ちください。</span>
@@ -1350,4 +1333,3 @@ ${seoRule ? seoRule : ""}
   </div>
 </body>
 </html>
-
