@@ -412,7 +412,7 @@
       .chip {
         background: #263241 !important;
         color: #e2e8f0 !important;
-        border-color: #334155 !重要; 
+        border-color: #334155 !important;
         box-shadow: none !important;
       }
       .chip input[type='checkbox'],
@@ -428,28 +428,27 @@
       textarea,
       input[type='text'] {
         background: #0f172a !important;
-        color: #e2e8f0 !重要; 
-        border-color: #334155 !重要; 
+        color: #e2e8f0 !important;
+        border-color: #334155 !important;
       }
       ::placeholder {
-        color: #94a3b8 !重要; 
+        color: #94a3b8 !important;
       }
       .btn-ghost,
       #copyBtn {
-        background: #0b1220 !重要; 
-        color: #e2e8f0 !重要; 
-        border-color: #334155 !重要; 
+        background: #0b1220 !important;
+        color: #e2e8f0 !important;
+        border-color: #334155 !important;
       }
       .summary {
-        background: #0f172a !重要; 
-        border-color: #334155 !重要; 
+        background: #0f172a !important;
       }
       .progress {
-        background: #1f2937 !重要; 
+        background: #1f2937 !important;
       }
       .small,
       .rate-text {
-        color: #94a3b8 !重要; 
+        color: #94a3b8 !important;
       }
       .lead-center .lead-em {
         color: #22d3ee;
@@ -458,33 +457,34 @@
         color: #94a3b8;
       }
       #reviewOutput {
-        border: 2px solid #64748b !重要; 
+        border: 2px solid #64748b !important;
         border-radius: 12px;
       }
       label.chip:has(input:checked),
       label.chip.active {
-        background: linear-gradient(135deg, #0b2a6d 0%, #0f3d91 100%) !重要; 
-        color: #eaf2ff !重要; 
-        border-color: #60a5fa !重要; 
-        box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.35) !重要; 
+        background: linear-gradient(135deg, #0b2a6d 0%, #0f3d91 100%) !important;
+        color: #eaf2ff !important;
+        border-color: #60a5fa !important;
+        box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.35) !important,
+          0 8px 16px rgba(2, 6, 23, 0.6) !important;
       }
       label.chip:has(input:focus-visible) {
-        outline: 2px solid #38bdf8 !重要; 
+        outline: 2px solid #38bdf8 !important;
         outline-offset: 3px;
       }
       textarea,
       input[type='text'] {
-        color: #111827 !重要; 
-        background: #ffffff !重要; 
-        caret-color: #111827 !重要; 
-        border-color: #cbd5e1 !重要; 
+        color: #111827 !important;
+        background: #ffffff !important;
+        caret-color: #111827 !important;
+        border-color: #cbd5e1 !important;
       }
       ::placeholder {
-        color: #6b7280 !重要; 
+        color: #6b7280 !important;
       }
       #q9 {
-        color: #111827 !重要; 
-        background: #ffffff !重要; 
+        color: #111827 !important;
+        background: #ffffff !important;
       }
     }
   </style>
@@ -683,7 +683,7 @@
         </form>
       </section>
 
-      <!-- 送信後の表示 -->
+      <!-- 回答後の画面（AI生成文の表示など） -->
       <section id="view-positive" class="view" aria-label="（内部ラベル）">
         <div class="result-card">
           <p class="lead lead-center">
@@ -894,9 +894,7 @@ ${seoRule ? seoRule : ""}
         return t;
       }
       if (plainLen < MIN && ans) {
-        const reasons = (ans.q5 ?? []).filter((x) =>
-          Object.prototype.hasOwnProperty.call(expandMap, x),
-        );
+        const reasons = (ans.q5 ?? []).filter((x) => Object.prototype.hasOwnProperty.call(expandMap, x));
         for (const r of reasons) {
           if (t.replace(/\n/g, "").length >= MIN) break;
           const add = expandMap[r];
@@ -906,8 +904,7 @@ ${seoRule ? seoRule : ""}
         if (period && !t.includes(period) && t.replace(/\n/g, "").length < MIN) {
           t += (t.endsWith("。") ? "" : "。") + period;
         }
-        const filler =
-          "全体として落ち着いて利用でき、今後も安心して通えそうだと感じました。";
+        const filler = "全体として落ち着いて利用でき、今後も安心して通えそうだと感じました。";
         if (t.replace(/\n/g, "").length < MIN && !t.includes(filler)) {
           t += (t.endsWith("。") ? "" : "。") + filler;
         }
@@ -947,7 +944,7 @@ ${seoRule ? seoRule : ""}
         TEG3: "TEG3の検査を受けられたこと",
         カウンセリング: "カウンセリングを受けるため",
       };
-      const chosen = (ans.q1 ?? []).map((v) => (chooseMap[v] ?? v));
+      const chosen = (ans.q1 ?? []).map((v) => chooseMap[v] ?? v);
       let chooseText = "";
       if (chosen.length) {
         chooseText += `${listJa(chosen)}が決め手となり、`;
@@ -1326,11 +1323,24 @@ ${seoRule ? seoRule : ""}
     })();
   </script>
 
-  <div id="loadingOverlay" class="loading-overlay" role="dialog" aria-modal="true" aria-labelledby="loadingTitle" aria-live="polite">
+  <div
+    id="loadingOverlay"
+    class="loading-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="loadingTitle"
+    aria-live="polite"
+  >
     <div class="loading-card">
       <div id="loadingTitle" class="loading-title">アンケート結果を送信中…</div>
-      <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-        <div id="loadingBar" class="bar"></div>
+      <div
+        class="progress"
+        role="progressbar"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="0"
+      >
+      <div id="loadingBar" class="bar"></div>
       </div>
       <div class="loading-sub">
         <span id="loadingNote">通常10秒ほどかかります。このままお待ちください。</span>
@@ -1340,3 +1350,4 @@ ${seoRule ? seoRule : ""}
   </div>
 </body>
 </html>
+
