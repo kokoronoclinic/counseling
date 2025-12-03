@@ -5,14 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>アンケート（カウンセリング用・最終版）</title>
   <meta name="color-scheme" content="light dark" />
-  <!--
-    このHTMLはカウンセリング用アンケートページの最終版です。
-    AI口コミ生成プロンプトのガイドラインを最新指示に合わせて修正し、
-    SEO語句の候補も「心理検査」を除外しました。
-    このファイルはユーザーの要望に応じて編集済みです。
-    Q1（通所の目的・お困りごと）セクションから「カウンセリング」の選択肢を削除しました。
-  -->
-
   <style>
     html {
       box-sizing: border-box;
@@ -116,11 +108,9 @@
       position: relative;
       cursor: pointer;
       user-select: none;
-      transition: background-color 0.15s ease, border-color 0.15s ease,
-        box-shadow 0.15s ease, color 0.15s ease;
+      transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
     }
-    .chip input[type='checkbox'],
-    .chip input[type='radio'] {
+    .chip input[type='checkbox'], .chip input[type='radio'] {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -134,12 +124,10 @@
       background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%) !important;
       color: #ffffff !important;
       border-color: #1d4ed8 !important;
-      box-shadow: 0 8px 14px rgba(29, 78, 216, 0.28) !important,
-        0 0 0 2px rgba(59, 130, 246, 0.38) !important;
+      box-shadow: 0 8px 14px rgba(29, 78, 216, 0.28) !important, 0 0 0 2px rgba(59, 130, 246, 0.38) !important;
     }
     label.chip:hover {
-      box-shadow: 0 10px 18px rgba(29, 78, 216, 0.3),
-        0 0 0 2px rgba(59, 130, 246, 0.4);
+      box-shadow: 0 10px 18px rgba(29, 78, 216, 0.3), 0 0 0 2px rgba(59, 130, 246, 0.4);
     }
     .chip:has(input:focus-visible) {
       outline: 2px solid #60a5fa;
@@ -149,25 +137,7 @@
       opacity: 0.6;
       cursor: not-allowed;
     }
-    .chip.active {
-      background: #eef2ff;
-      border-color: #6366f1;
-      color: #0f172a;
-      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
-    }
-    .chip.active {
-      background: linear-gradient(135deg, #0b2a6d 0%, #0f3d91 100%);
-      color: #eaf2ff;
-      border-color: #60a5fa;
-      box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.35),
-        0 8px 16px rgba(2, 6, 23, 0.6);
-    }
-    .chip:has(input:focus-visible) {
-      outline: 2px solid #38bdf8;
-      outline-offset: 3px;
-    }
-    textarea,
-    input[type='text'] {
+    textarea, input[type='text'] {
       display: block;
       width: 100%;
       max-width: 100%;
@@ -190,10 +160,7 @@
       bottom: 0;
       margin-top: 4px;
     }
-    .btn,
-    .btn-ghost,
-    .btn-go,
-    #copyBtn {
+    .btn, .btn-ghost, .btn-go, #copyBtn {
       display: inline-flex;
       justify-content: center;
       align-items: center;
@@ -207,24 +174,19 @@
       border: 0;
       cursor: pointer;
     }
-    .btn,
-    .btn-go {
+    .btn, .btn-go {
       color: #fff;
       background: linear-gradient(135deg, #0f766e, #14b8a6);
       box-shadow: 0 8px 14px rgba(15, 118, 110, 0.22);
     }
-    .btn-ghost,
-    #copyBtn {
+    .btn-ghost, #copyBtn {
       background: #eef2ff;
       color: #0f172a;
       border: 1px solid #c7d2fe;
       padding: 12px 14px;
       border-radius: 12px;
     }
-    .btn:active,
-    .btn-go:active,
-    .btn-ghost:active,
-    #copyBtn:active {
+    .btn:active, .btn-go:active, .btn-ghost:active, #copyBtn:active {
       transform: translateY(1px);
     }
     .view {
@@ -242,10 +204,6 @@
     .lead {
       margin-top: 4px;
       line-height: 1.7;
-    }
-    .lead .spaced {
-      display: block;
-      margin-top: 1em;
     }
     .actions {
       display: grid;
@@ -374,10 +332,7 @@
       margin-top: 6px;
       line-height: 1.95;
     }
-    #q1_other,
-    #q2_other,
-    #q5_other,
-    textarea#q9 {
+    #q1_other, #q2_other, #q5_other, textarea#q9 {
       position: static !important;
       inset: auto !important;
       width: 100% !important;
@@ -391,8 +346,7 @@
       border-radius: 12px !important;
       box-shadow: none !important;
     }
-    label.chip:has(input[type='text']),
-    label.chip.active:has(input[type='text']) {
+    label.chip:has(input[type='text']), label.chip.active:has(input[type='text']) {
       background: transparent !important;
       border-color: transparent !important;
       box-shadow: none !important;
@@ -402,6 +356,7 @@
       position: static !important;
       opacity: 1 !important;
     }
+    /* Dark mode override */
     @media (prefers-color-scheme: dark) {
       html {
         color-scheme: dark;
@@ -415,8 +370,7 @@
         border-color: #334155 !important;
         box-shadow: none !important;
       }
-      .chip input[type='checkbox'],
-      .chip input[type='radio'] {
+      .chip input[type='checkbox'], .chip input[type='radio'] {
         position: absolute;
         inset: 0;
         width: 100%;
@@ -425,17 +379,15 @@
         opacity: 0;
         pointer-events: auto;
       }
-      textarea,
-      input[type='text'] {
+      textarea, input[type='text'] {
         background: #0f172a !important;
         color: #e2e8f0 !important;
-        border-color: #334155 !重要;
+        border-color: #334155 !important;
       }
       ::placeholder {
         color: #94a3b8 !important;
       }
-      .btn-ghost,
-      #copyBtn {
+      .btn-ghost, #copyBtn {
         background: #0b1220 !important;
         color: #e2e8f0 !important;
         border-color: #334155 !important;
@@ -446,8 +398,7 @@
       .progress {
         background: #1f2937 !important;
       }
-      .small,
-      .rate-text {
+      .small, .rate-text {
         color: #94a3b8 !important;
       }
       .lead-center .lead-em {
@@ -460,8 +411,7 @@
         border: 2px solid #64748b !important;
         border-radius: 12px;
       }
-      label.chip:has(input:checked),
-      label.chip.active {
+      label.chip:has(input:checked), label.chip.active {
         background: linear-gradient(135deg, #0b2a6d 0%, #0f3d91 100%) !important;
         color: #eaf2ff !important;
         border-color: #60a5fa !important;
@@ -472,12 +422,11 @@
         outline: 2px solid #38bdf8 !important;
         outline-offset: 3px;
       }
-      textarea,
-      input[type='text'] {
-        color: #111827 !重要;
-        background: #ffffff !重要;
-        caret-color: #111827 !重要;
-        border-color: #cbd5e1 !重要;
+      textarea, input[type='text'] {
+        color: #111827 !important;
+        background: #ffffff !important;
+        caret-color: #111827 !important;
+        border-color: #cbd5e1 !important;
       }
       ::placeholder {
         color: #6b7280 !important;
@@ -489,7 +438,6 @@
     }
   </style>
 </head>
-
 <body>
   <div class="wrap">
     <div class="card">
@@ -532,7 +480,6 @@
               </div>
             </div>
           </fieldset>
-
           <!-- Q2 -->
           <fieldset>
             <legend>2. 当施設を選んだ経緯を教えてください（複数回答可）</legend>
@@ -566,7 +513,6 @@
               </div>
             </div>
           </fieldset>
-
           <!-- Q3 -->
           <fieldset>
             <legend>3. 担当のお名前を教えてください（1つ選択／選択なし可）</legend>
@@ -596,7 +542,6 @@
               <input type="text" id="q3_other" placeholder="担当者名（自由記載）" />
             </div>
           </fieldset>
-
           <!-- Q4 -->
           <fieldset id="q5_fieldset">
             <legend>4. 当施設をお勧めできる点を教えてください（複数回答可）</legend>
@@ -638,7 +583,6 @@
               </div>
             </div>
           </fieldset>
-
           <!-- Q5 -->
           <fieldset id="q10_container">
             <legend>5. 通所してからどのくらい経過していますか？（1つ選択）</legend>
@@ -665,20 +609,17 @@
               </label>
             </div>
           </fieldset>
-
           <!-- Q6 -->
           <fieldset>
             <legend>6. その他、何かありましたらご記載ください。（自由回答）</legend>
             <textarea id="q9" placeholder="例）面談の印象や雰囲気、予約や会計の使い勝手など、自由にお書きください"></textarea>
           </fieldset>
-
           <div class="submit-bar">
             <button class="btn" type="submit" aria-label="送信">【送信】</button>
           </div>
         </form>
       </section>
-
-      <!-- AI 口コミ表示 -->
+      <!-- AI output -->
       <section id="view-positive" class="view" aria-label="（内部ラベル）">
         <div class="result-card">
           <p class="lead lead-center">
@@ -701,8 +642,6 @@
           <div id="answerSummary" class="small"></div>
         </details>
       </section>
-
-      <!-- お礼画面 -->
       <section id="view-thanks" class="view" aria-label="（内部ラベル）">
         <div class="result-card">
           <h2 style="margin: 0; font-size: 20px;">アンケートへのご協力、ありがとうございました。</h2>
@@ -712,9 +651,8 @@
       </section>
     </div>
   </div>
-
   <script>
-    // 設定
+    // Basic config
     var appConfig = {
       clinicName: "心のクリニック武蔵小杉",
       googleReviewUrl: "https://g.pagerCZZ6G6Jhb7YZEBMreview",
@@ -724,12 +662,10 @@
         headers: {}
       }
     };
-
-    (function () {
+    (function() {
       var isLocal = location.protocol === "file:";
       appConfig.ai.mode = isLocal ? "mock" : "endpoint";
     })();
-
     function computePeriodPhrase(ans) {
       if (ans.q10 === "初めて") return "今回は初めて利用しました。";
       if (ans.q10 === "３カ月未満") return "通い始めてまだ数か月です。";
@@ -738,21 +674,15 @@
       if (ans.q10 === "数年") return "数年通っています。";
       return "";
     }
-
     function getSeoTerms(ans) {
       var CANDIDATES = ["武蔵小杉", "カウンセリング", "WAIS-Ⅳ", "TEG3"];
-      var haystack = ""
-        + (ans.q1 ? ans.q1.join("") : "")
-        + (ans.q2 ? ans.q2.join("") : "")
-        + (ans.q3 || "")
-        + (ans.q9 || "");
+      var haystack = "" + (ans.q1 ? ans.q1.join("") : "") + (ans.q2 ? ans.q2.join("") : "") + (ans.q3 || "") + (ans.q9 || "");
       var found = [];
       for (var i = 0; i < CANDIDATES.length; i++) {
         if (haystack.indexOf(CANDIDATES[i]) !== -1) {
           found.push(CANDIDATES[i]);
         }
       }
-      // シャッフル
       for (var k = found.length - 1; k > 0; k--) {
         var j = Math.floor(Math.random() * (k + 1));
         var tmp = found[k];
@@ -761,92 +691,61 @@
       }
       return found;
     }
-
     function getDoctorName(ans) {
       var known = ["渡辺", "笈川", "市毛", "森本"];
       if (known.indexOf(ans.q3) !== -1) {
         return ans.q3 + "先生";
       }
-
-      // 自由記載
       if (ans.q3 === "その他" && ans.q3_other && ans.q3_other.trim()) {
         var trimmed = ans.q3_other.trim();
-        if (trimmed === "担当医") {
-          return "先生";
-        }
-        if (trimmed.slice(-2) === "先生") {
-          return trimmed;
-        }
+        if (trimmed === "担当医") return "先生";
+        if (trimmed.slice(-2) === "先生") return trimmed;
         return trimmed + "先生";
       }
-
       return "先生";
     }
-
-    // 箇条書きではなく、シンプルな本文としてプロンプトを構成
     function buildSystemPrompt(ans) {
-      var clinic = appConfig && appConfig.clinicName ? appConfig.clinicName : "当施設";
+      var clinic = (appConfig && appConfig.clinicName) ? appConfig.clinicName : "当施設";
       var periodPhrase = computePeriodPhrase(ans);
       var seoTerms = getSeoTerms(ans);
       var text = "";
-
       text += "あなたはカウンセリング施設のアンケート回答を自然な日本語の口コミ文に整えるアシスタントです。\n";
       text += "事実ベースで誇張せず、一人称の丁寧な口調で、1〜2段落・全体150字前後を目安に書いてください。\n";
-      text += "絵文字や機種依存文字は使わず、「セッション」という語は使わずに面談の様子と表現してください。\n";
+      text += "絵文字や機種依存文字は使わず、\"セッション\"という語は使わずに面談の様子と表現してください。\n";
       text += "構成は、利用のきっかけ、施設を選んだ理由、面談の様子、良かった点、総合的なコメントの流れにしてください。\n";
-      text += "「WAIS-Ⅳ」「TEG3」などの検査名や「カウンセリング」が目的の場合は、症状が続いたという表現ではなく、検査やカウンセリングを受けるという表現にしてください。\n";
-      text += "一文目には必ず施設名「" + clinic + "」を含めてください。\n";
-      text += "先生の表記は、名前が不明な場合は「先生」、それ以外は氏名に「先生」を付けた形を使ってください。\n";
-      text += "「医師」「担当医」「担当の医師」といった言い方は使わないでください。\n";
-
+      text += "\"WAIS-Ⅳ\"や\"TEG3\"などの検査名や\"カウンセリング\"が目的の場合は、症状が続いたという表現ではなく、検査やカウンセリングを受けるという表現にしてください。\n";
+      text += "一文目には必ず施設名\"" + clinic + "\"を含めてください。\n";
+      text += "先生の表記は、名前が不明な場合は\"先生\"、それ以外は氏名に\"先生\"を付けた形を使ってください。\n";
+      text += "\"医師\"\"担当医\"\"担当の医師\"といった言い方は使わないでください。\n";
       if (periodPhrase) {
-        text += "通所期間を示す文として「" + periodPhrase + "」を本文中に一度含めてください。\n";
+        text += "通所期間を示す文として\"" + periodPhrase + "\"を本文中に一度含めてください。\n";
       }
-
       if (seoTerms.length > 0) {
-        text += "次の語句は表記を変えず、不自然にならない位置に各1回程度、自然な文脈で含めてください：";
-        text += seoTerms.join("、") + "。\n";
+        text += "次の語句は表記を変えず、不自然にならない位置に各1回程度、自然な文脈で含めてください：" + seoTerms.join("、") + "。\n";
       }
-
       text += "アンケートの良かった点（q5）は、不自然にならない範囲で適切に反映してください。\n";
-
       return text;
     }
-
-    function $$(selector, root) {
-      if (!root) root = document;
-      return Array.prototype.slice.call(root.querySelectorAll(selector));
-    }
-
     function sanitizeInline(text) {
       if (!text) return "";
-      return String(text)
-        .replace(/[\n\r]+/g, "、")
-        .replace(/[ ]+/g, " ")
-        .trim();
+      return String(text).replace(/[\n\r]+/g, "、").replace(/[ ]+/g, " ").trim();
     }
-
     function getCheckedValues(name) {
-      var nodes = $$("input[name='" + name + "']:checked");
+      var nodes = document.querySelectorAll("input[name='" + name + "']:checked");
       var vals = [];
-      for (var i = 0; i < nodes.length; i++) {
-        vals.push(nodes[i].value);
-      }
+      nodes.forEach(function(el) { vals.push(el.value); });
       return vals;
     }
-
     function listJa(arr) {
       if (!arr) return "—";
-      if (!arr.length) return "—";
+      if (arr.length === 0) return "—";
       if (arr.length === 1) return arr[0];
       return arr.slice(0, -1).join("、") + "、" + arr[arr.length - 1];
     }
-
     function toggle(el, show) {
       if (!el) return;
       el.style.display = show ? "" : "none";
     }
-
     function filterPositives(items) {
       var positives = {
         "良く聞いてくれた": true,
@@ -859,40 +758,26 @@
       };
       var result = [];
       if (!items) return result;
-      for (var i = 0; i < items.length; i++) {
-        if (positives[items[i]]) result.push(items[i]);
-      }
+      items.forEach(function(item) {
+        if (positives[item]) result.push(item);
+      });
       return result;
     }
-
     function enforceLength(text, ans) {
       if (text == null) return text;
-      var t = String(text)
-        .replace(/[ \t]+/g, " ")
-        .replace(/\n{3,}/g, "\n\n")
-        .trim();
+      var t = String(text).replace(/[ \t]+/g, " ").replace(/\n{3,}/g, "\n\n").trim();
       var MIN = 180;
       var MAX = 220;
-
       var expandMap = {
-        "良く聞いてくれた":
-          "落ち着いて話せる雰囲気で、こちらのペースに合わせて進めてくださいました。些細な不安にも耳を傾けてくれて、納得いくまで相談できました。",
-        "WEB予約が便利":
-          "WEB予約による手続きが簡単で、都合に合わせて利用しやすかったです。",
-        "Cashless決済が便利":
-          "キャッシュレス決済が使用でき、会計がスムーズで手間がかかりませんでした。",
-        "駅近くで便利":
-          "武蔵小杉駅が近いので、継続利用もしやすいと感じます。",
-        "TEG3の検査":
-          "TEG3の心理検査も受けられ、状態の理解が深まりました。",
-        "WAIS-Ⅳの検査":
-          "WAIS-Ⅳの検査を通じて自分の特性を知ることができ、有意義でした。",
-        "カウンセリング":
-          "カウンセリングが丁寧で、安心して話をすることができました。"
+        "良く聞いてくれた": "落ち着いて話せる雰囲気で、こちらのペースに合わせて進めてくださいました。些細な不安にも耳を傾けてくれて、納得いくまで相談できました。",
+        "WEB予約が便利": "WEB予約による手続きが簡単で、都合に合わせて利用しやすかったです。",
+        "Cashless決済が便利": "キャッシュレス決済が使用でき、会計がスムーズで手間がかかりませんでした。",
+        "駅近くで便利": "武蔵小杉駅が近いので、継続利用もしやすいと感じます。",
+        "TEG3の検査": "TEG3の心理検査も受けられ、状態の理解が深まりました。",
+        "WAIS-Ⅳの検査": "WAIS-Ⅳの検査を通じて自分の特性を知ることができ、有意義でした。",
+        "カウンセリング": "カウンセリングが丁寧で、安心して話をすることができました。"
       };
-
       var plainLen = t.replace(/\n/g, "").length;
-
       if (plainLen > MAX) {
         var cut = t.replace(/\n/g, "");
         if (cut.length > MAX) cut = cut.slice(0, MAX);
@@ -904,22 +789,19 @@
         if (!t.endsWith("。")) t += "。";
         return t;
       }
-
       if (plainLen < MIN && ans) {
         var reasons = [];
         var q5 = ans.q5 || [];
-        for (var key in expandMap) {
-          if (q5.indexOf(key) !== -1) {
-            reasons.push(key);
-          }
-        }
-        for (var i = 0; i < reasons.length; i++) {
-          if (t.replace(/\n/g, "").length >= MIN) break;
-          var add = expandMap[reasons[i]];
+        q5.forEach(function(key) {
+          if (expandMap.hasOwnProperty(key)) reasons.push(key);
+        });
+        reasons.forEach(function(r) {
+          if (t.replace(/\n/g, "").length >= MIN) return;
+          var add = expandMap[r];
           if (add && t.indexOf(add) === -1) {
             t += (t.endsWith("。") ? "" : "。") + add;
           }
-        }
+        });
         var period = computePeriodPhrase(ans);
         if (period && t.indexOf(period) === -1 && t.replace(/\n/g, "").length < MIN) {
           t += (t.endsWith("。") ? "" : "。") + period;
@@ -931,11 +813,9 @@
       }
       return t;
     }
-
     function generateReviewLocally(ans) {
       var deptList = ["カウンセリングルーム", "メンタルヘルスサービス", "心理相談室"];
       var dept = deptList[Math.floor(Math.random() * deptList.length)];
-
       var motive = "心身の不調が続いたため";
       if (ans.q2 && ans.q2.length) {
         var symptomsList = ["不眠", "不安", "抑うつ", "悩み相談"];
@@ -944,19 +824,17 @@
         var symptoms = [];
         var tests = [];
         var counsel = [];
-        for (var i = 0; i < ans.q2.length; i++) {
-          var v = ans.q2[i];
+        ans.q2.forEach(function(v) {
           if (symptomsList.indexOf(v) !== -1) symptoms.push(v);
           if (testsList.indexOf(v) !== -1) tests.push(v);
           if (counselList.indexOf(v) !== -1) counsel.push(v);
-        }
+        });
         var parts = [];
         if (symptoms.length) parts.push("「" + listJa(symptoms) + "」が続き");
         if (tests.length) parts.push(listJa(tests) + "の検査を受けるため");
         if (counsel.length) parts.push("カウンセリングを受けるため");
         if (parts.length) motive = parts.join("、");
       }
-
       var chooseMap = {
         "武蔵小杉駅近く": "武蔵小杉駅から近かったこと",
         "自宅近く": "自宅から近かったこと",
@@ -969,33 +847,23 @@
       };
       var chosenRaw = ans.q1 || [];
       var chosen = [];
-      for (var c = 0; c < chosenRaw.length; c++) {
-        chosen.push(chooseMap[chosenRaw[c]] || chosenRaw[c]);
-      }
+      chosenRaw.forEach(function(c) {
+        chosen.push(chooseMap[c] || c);
+      });
       var chooseText = "";
       if (chosen.length) {
         chooseText = listJa(chosen) + "が決め手となり、";
       }
-
       var doctor = getDoctorName(ans);
       var good = filterPositives(ans.q5);
       var goodLine = good.length ? "特に「" + listJa(good.slice(0, 3)) + "」と感じました。" : "";
       var extra = sanitizeInline(ans.q9);
       var closing = "予約から会計までの流れもスムーズで、安心して利用できました。";
-
-      var endingsRaw = [
-        "こちらを利用しました",
-        "コチラを利用しました",
-        "心のクリニックを利用しました",
-        "心のクリニック武蔵小杉を利用しました"
-      ];
+      var endingsRaw = ["こちらを利用しました", "コチラを利用しました", "心のクリニックを利用しました", "心のクリニック武蔵小杉を利用しました"];
       var endings = [];
-      for (var e = 0; e < endingsRaw.length; e++) {
-        endings.push(endingsRaw[e].replace(/[。．.]+$/u, ""));
-      }
+      endingsRaw.forEach(function(e) { endings.push(e.replace(/[。．.]+$/u, "")); });
       var ending = endings[Math.floor(Math.random() * endings.length)];
       var periodPhrase = computePeriodPhrase(ans);
-
       var lines = [];
       var first = motive + "、" + dept + "を探し、" + chooseText + ending + "。";
       if (periodPhrase) first += " " + periodPhrase;
@@ -1006,41 +874,29 @@
       lines.push("同じようなお悩みの方にも勧めたいと思います。");
       return lines.join("\n");
     }
-
     function generateReviewWithEndpoint(ans) {
-      return new Promise(function (resolve) {
+      return new Promise(function(resolve) {
         fetch(appConfig.ai.endpoint, {
           method: "POST",
           headers: Object.assign({ "Content-Type": "application/json" }, appConfig.ai.headers || {}),
-          body: JSON.stringify({
-            answers: ans,
-            systemPrompt: buildSystemPrompt(ans)
-          })
-        })
-          .then(function (res) {
-            if (!res.ok) throw new Error("bad status " + res.status);
-            return res.json();
-          })
-          .then(function (data) {
-            if (data && data.review) {
-              resolve(data.review);
-            } else {
-              resolve(generateReviewLocally(ans));
-            }
-          })
-          .catch(function () {
-            resolve(generateReviewLocally(ans));
-          });
+          body: JSON.stringify({ answers: ans, systemPrompt: buildSystemPrompt(ans) })
+        }).then(function(res) {
+          if (!res.ok) throw new Error("bad status " + res.status);
+          return res.json();
+        }).then(function(data) {
+          if (data && data.review) resolve(data.review);
+          else resolve(generateReviewLocally(ans));
+        }).catch(function() {
+          resolve(generateReviewLocally(ans));
+        });
       });
     }
-
     function generateReview(ans) {
       if (appConfig.ai.mode === "endpoint" && appConfig.ai.endpoint) {
         return generateReviewWithEndpoint(ans);
       }
       return Promise.resolve(generateReviewLocally(ans));
     }
-
     function collectAnswers(form) {
       var q1 = getCheckedValues("q1");
       if (q1.indexOf("その他") !== -1) {
@@ -1051,7 +907,6 @@
           q1.splice(q1.indexOf("その他"), 1);
         }
       }
-
       var q2 = getCheckedValues("q2");
       if (q2.indexOf("その他") !== -1) {
         var t2 = sanitizeInline(document.getElementById("q2_other").value);
@@ -1061,14 +916,12 @@
           q2.splice(q2.indexOf("その他"), 1);
         }
       }
-
       var q3El = document.querySelector("input[name='q3']:checked");
       var q3 = q3El ? q3El.value : "";
       if (q3 === "その他") {
         var t3 = sanitizeInline(document.getElementById("q3_other").value);
         q3 = t3 || "";
       }
-
       var q5 = getCheckedValues("q5");
       if (q5.indexOf("その他") !== -1) {
         var t5 = sanitizeInline(document.getElementById("q5_other").value);
@@ -1078,13 +931,10 @@
           q5.splice(q5.indexOf("その他"), 1);
         }
       }
-
       var q10El = document.querySelector("input[name='q10']:checked");
       var q10 = q10El ? q10El.value : "";
-
       var q3_other_input = document.getElementById("q3_other");
       var q3_other_val = q3_other_input ? q3_other_input.value.trim() : "";
-
       return {
         q1: q1,
         q2: q2,
@@ -1095,7 +945,6 @@
         q3_other: q3_other_val
       };
     }
-
     function renderSummary(ans) {
       var lines = [];
       lines.push("通所の目的お困りごと: " + (ans.q2.length ? listJa(ans.q2) : "—"));
@@ -1108,12 +957,9 @@
       }
       document.getElementById("answerSummary").textContent = lines.join("\n");
     }
-
     function showView(id) {
       var views = document.querySelectorAll(".view");
-      for (var i = 0; i < views.length; i++) {
-        views[i].classList.remove("active");
-      }
+      views.forEach(function(v) { v.classList.remove("active"); });
       var el = document.getElementById(id);
       if (el) el.classList.add("active");
       try {
@@ -1121,12 +967,10 @@
       } catch (e) {}
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-
     function updateGoogleLink() {
       var a = document.getElementById("googleLink");
       if (a) a.href = appConfig.googleReviewUrl || "https://maps.google.com";
     }
-
     function autosizeTextarea(ta) {
       if (!ta) return;
       var max = Math.round(window.innerHeight * 0.60);
@@ -1135,9 +979,8 @@
       var next = Math.max(min, Math.min(max, ta.scrollHeight));
       ta.style.height = next + "px";
     }
-
-    // ローディング (window.showLoading / window.hideLoading)
-    (function () {
+    // Loading overlay functions
+    (function() {
       var timer = null;
       var drift = null;
       var progress = 0;
@@ -1146,19 +989,10 @@
       var DRIFT_MAX = 97;
       var DRIFT_STEP = 1;
       var DRIFT_INTERVAL = 900;
-
-      function overlay() {
-        return document.getElementById("loadingOverlay");
-      }
-      function bar() {
-        return document.getElementById("loadingBar");
-      }
-      function pct() {
-        return document.getElementById("loadingPct");
-      }
-      function progEl() {
-        return document.querySelector(".progress");
-      }
+      function overlay() { return document.getElementById("loadingOverlay"); }
+      function bar() { return document.getElementById("loadingBar"); }
+      function pct() { return document.getElementById("loadingPct"); }
+      function progEl() { return document.querySelector(".progress"); }
       function updateAria(now) {
         try {
           var p = progEl();
@@ -1174,21 +1008,19 @@
         if (pctEl) pctEl.textContent = progress + "%";
         updateAria(progress);
       }
-
-      window.showLoading = function () {
+      window.showLoading = function() {
         var ov = overlay();
         if (!ov) return;
         if (timer) clearInterval(timer);
         if (drift) clearInterval(drift);
-        timer = null;
-        drift = null;
+        timer = null; drift = null;
         setProgress(0);
         ov.style.display = "flex";
         document.body.setAttribute("aria-busy", "true");
         document.body.style.pointerEvents = "none";
         document.body.style.touchAction = "none";
         var start = (window.performance && performance.now) ? performance.now() : Date.now();
-        timer = setInterval(function () {
+        timer = setInterval(function() {
           var now = (window.performance && performance.now) ? performance.now() : Date.now();
           var elapsedMs = now - start;
           var ideal = (elapsedMs / EXPECTED_MS) * 100;
@@ -1197,22 +1029,20 @@
           if (progress >= HOLD_AT && !drift) {
             clearInterval(timer);
             timer = null;
-            drift = setInterval(function () {
+            drift = setInterval(function() {
               if (progress < DRIFT_MAX) setProgress(progress + DRIFT_STEP);
             }, DRIFT_INTERVAL);
           }
         }, 120);
       };
-
-      window.hideLoading = function () {
+      window.hideLoading = function() {
         var ov = overlay();
         if (!ov) return;
         if (timer) clearInterval(timer);
         if (drift) clearInterval(drift);
-        timer = null;
-        drift = null;
+        timer = null; drift = null;
         setProgress(100);
-        setTimeout(function () {
+        setTimeout(function() {
           ov.style.display = "none";
           document.body.removeAttribute("aria-busy");
           document.body.style.pointerEvents = "";
@@ -1221,23 +1051,19 @@
         }, 220);
       };
     })();
-
-    // DOM 準備
-    window.addEventListener("DOMContentLoaded", function () {
-      window.addEventListener("resize", function () {
+    window.addEventListener("DOMContentLoaded", function() {
+      window.addEventListener("resize", function() {
         autosizeTextarea(document.getElementById("reviewOutput"));
       });
-
       function bindOther(name, wrapId) {
         var inputs = document.querySelectorAll("input[name='" + name + "']");
-        for (var i = 0; i < inputs.length; i++) {
-          inputs[i].addEventListener("change", function () {
+        inputs.forEach(function(el) {
+          el.addEventListener("change", function() {
             var checked = getCheckedValues(name).indexOf("その他") !== -1;
             toggle(document.getElementById(wrapId), checked);
           });
-        }
+        });
       }
-
       function bindRadioOther(name, wrapId) {
         var wrap = document.getElementById(wrapId);
         function update() {
@@ -1246,109 +1072,89 @@
           if (wrap) wrap.style.display = (v === "その他") ? "" : "none";
         }
         var inputs = document.querySelectorAll("input[name='" + name + "']");
-        for (var i = 0; i < inputs.length; i++) {
-          inputs[i].addEventListener("change", update);
-        }
+        inputs.forEach(function(el) {
+          el.addEventListener("change", update);
+        });
         update();
       }
-
       bindOther("q1", "q1_other_wrap");
       bindOther("q2", "q2_other_wrap");
       bindOther("q5", "q5_other_wrap");
       bindRadioOther("q3", "q3_other_wrap");
-
-      (function () {
+      (function() {
         function syncGroup(name) {
           var groupInputs = document.querySelectorAll("input[name='" + name + "']");
-          for (var i = 0; i < groupInputs.length; i++) {
-            var lab = groupInputs[i].closest("label.chip");
-            if (lab) lab.classList.toggle("active", groupInputs[i].checked);
-          }
+          groupInputs.forEach(function(x) {
+            var lab = x.closest("label.chip");
+            if (lab) lab.classList.toggle("active", x.checked);
+          });
         }
         var allInputs = document.querySelectorAll("label.chip input");
-        for (var j = 0; j < allInputs.length; j++) {
-          (function (inp) {
-            var lab = inp.closest("label.chip");
-            if (lab) lab.classList.toggle("active", inp.checked);
-            inp.addEventListener("change", function () {
-              if (inp.type === "radio") {
-                syncGroup(inp.name);
-              } else {
-                if (lab) lab.classList.toggle("active", inp.checked);
-              }
-            });
-          })(allInputs[j]);
-        }
+        allInputs.forEach(function(inp) {
+          var lab = inp.closest("label.chip");
+          if (lab) lab.classList.toggle("active", inp.checked);
+          inp.addEventListener("change", function() {
+            if (inp.type === "radio") {
+              syncGroup(inp.name);
+            } else {
+              if (lab) lab.classList.toggle("active", inp.checked);
+            }
+          });
+        });
       })();
-
-      document.getElementById("surveyForm").addEventListener("submit", function (e) {
+      document.getElementById("surveyForm").addEventListener("submit", function(e) {
         e.preventDefault();
         var ans = collectAnswers(e.currentTarget);
         renderSummary(ans);
         if (typeof showLoading === "function") showLoading();
-        generateReview(ans)
-          .then(function (review) {
-            review = enforceLength(review, ans);
-            var out = document.getElementById("reviewOutput");
-            out.value = review;
-            out.readOnly = false;
-            out.disabled = false;
-            out.style.pointerEvents = "auto";
-            out.style.caretColor = "#111827";
-            updateGoogleLink();
-            showView("view-positive");
-            autosizeTextarea(out);
-            out.focus();
-          })
-          .catch(function (err) {
-            console.error(err);
-            showView("view-thanks");
-          })
-          .finally(function () {
-            if (typeof hideLoading === "function") hideLoading();
-          });
+        generateReview(ans).then(function(review) {
+          review = enforceLength(review, ans);
+          var out = document.getElementById("reviewOutput");
+          out.value = review;
+          out.readOnly = false;
+          out.disabled = false;
+          out.style.pointerEvents = "auto";
+          out.style.caretColor = "#111827";
+          updateGoogleLink();
+          showView("view-positive");
+          autosizeTextarea(out);
+          out.focus();
+        }).catch(function(err) {
+          console.error(err);
+          showView("view-thanks");
+        }).finally(function() {
+          if (typeof hideLoading === "function") hideLoading();
+        });
       });
-
-      document.getElementById("openBtn").addEventListener("click", function () {
+      document.getElementById("openBtn").addEventListener("click", function() {
         var url = appConfig.googleReviewUrl || "https://maps.google.com";
         var w = window.open(url, "_blank", "noopener");
         if (!w) location.href = url;
       });
-
-      document.getElementById("copyBtn").addEventListener("click", function () {
+      document.getElementById("copyBtn").addEventListener("click", function() {
         var ta = document.getElementById("reviewOutput");
         var text = ta.value;
         if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(text)
-            .then(function () {
-              alert("投稿案をコピーしました。Googleの画面で貼り付けてご利用ください。");
-            })
-            .catch(function () {
-              ta.select();
-              document.execCommand("copy");
-              alert("投稿案をコピーしました。Googleの画面で貼り付けてご利用ください。");
-            });
+          navigator.clipboard.writeText(text).then(function() {
+            alert("投稿案をコピーしました。Googleの画面で貼り付けてご利用ください。");
+          }).catch(function() {
+            ta.select();
+            document.execCommand("copy");
+            alert("投稿案をコピーしました。Googleの画面で貼り付けてご利用ください。");
+          });
         } else {
           ta.select();
           document.execCommand("copy");
           alert("投稿案をコピーしました。Googleの画面で貼り付けてご利用ください。");
         }
       });
-
-      document.getElementById("backBtn").addEventListener("click", function () {
-        try {
-          window.open("", "_self");
-        } catch (e) {}
-        try {
-          window.close();
-        } catch (e) {}
-        setTimeout(function () {
-          try {
-            location.href = "about:blank";
-          } catch (e) {}
+      document.getElementById("backBtn").addEventListener("click", function() {
+        try { window.open("", "_self"); } catch (e) {}
+        try { window.close(); } catch (e) {}
+        setTimeout(function() {
+          try { location.href = "about:blank"; } catch (e) {}
         }, 80);
       });
-
       if (location.hash === "#view-positive") {
         showView("view-positive");
         autosizeTextarea(document.getElementById("reviewOutput"));
@@ -1358,24 +1164,10 @@
       }
     });
   </script>
-
-  <div
-    id="loadingOverlay"
-    class="loading-overlay"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="loadingTitle"
-    aria-live="polite"
-  >
+  <div id="loadingOverlay" class="loading-overlay" role="dialog" aria-modal="true" aria-labelledby="loadingTitle" aria-live="polite">
     <div class="loading-card">
       <div id="loadingTitle" class="loading-title">アンケート結果を送信中…</div>
-      <div
-        class="progress"
-        role="progressbar"
-        aria-valuemin="0"
-        aria-valuemax="100"
-        aria-valuenow="0"
-      >
+      <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
         <div id="loadingBar" class="bar"></div>
       </div>
       <div class="loading-sub">
