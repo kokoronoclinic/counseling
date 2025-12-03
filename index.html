@@ -429,7 +429,7 @@
       input[type='text'] {
         background: #0f172a !important;
         color: #e2e8f0 !important;
-        border-color: #334155 !important;
+        border-color: #334155 !重要;
       }
       ::placeholder {
         color: #94a3b8 !important;
@@ -474,10 +474,10 @@
       }
       textarea,
       input[type='text'] {
-        color: #111827 !important;
-        background: #ffffff !important;
-        caret-color: #111827 !important;
-        border-color: #cbd5e1 !important;
+        color: #111827 !重要;
+        background: #ffffff !重要;
+        caret-color: #111827 !重要;
+        border-color: #cbd5e1 !重要;
       }
       ::placeholder {
         color: #6b7280 !important;
@@ -515,7 +515,6 @@
                 <input type="checkbox" name="q2" value="悩み相談" />
                 悩み相談
               </label>
-              <!-- 以下、検査やカウンセリングを目的として通所される場合の選択肢を追加 -->
               <label class="chip">
                 <input type="checkbox" name="q2" value="WAIS-Ⅳ" />
                 WAIS-Ⅳ
@@ -524,7 +523,6 @@
                 <input type="checkbox" name="q2" value="TEG3" />
                 TEG3
               </label>
-              <!-- ユーザーの要望により「カウンセリング」の選択肢を削除しました -->
               <label class="chip">
                 <input type="checkbox" name="q2" value="その他" />
                 その他
@@ -559,7 +557,6 @@
                 <input type="checkbox" name="q1" value="土日開所" />
                 土日開所
               </label>
-              <!-- WAIS-Ⅳ・TEG3・カウンセリングは「目的」の質問に移動したため削除 -->
               <label class="chip">
                 <input type="checkbox" name="q1" value="その他" />
                 その他
@@ -620,7 +617,6 @@
                 <input type="checkbox" name="q5" value="駅近くで便利" />
                 駅近くで便利
               </label>
-              <!-- 以下の選択肢を修正：検査・カウンセリングを削除し、新たに利便性に関する項目を追加 -->
               <label class="chip">
                 <input type="checkbox" name="q5" value="待ち時間が短い" />
                 待ち時間が短い
@@ -673,7 +669,6 @@
           <!-- Q6 -->
           <fieldset>
             <legend>6. その他、何かありましたらご記載ください。（自由回答）</legend>
-            <!-- セッションという語を避け、面談に言い換え -->
             <textarea id="q9" placeholder="例）面談の印象や雰囲気、予約や会計の使い勝手など、自由にお書きください"></textarea>
           </fieldset>
 
@@ -683,7 +678,7 @@
         </form>
       </section>
 
-      <!-- 回答後の画面（AI生成文の表示など） -->
+      <!-- AI 口コミ表示 -->
       <section id="view-positive" class="view" aria-label="（内部ラベル）">
         <div class="result-card">
           <p class="lead lead-center">
@@ -707,6 +702,7 @@
         </details>
       </section>
 
+      <!-- お礼画面 -->
       <section id="view-thanks" class="view" aria-label="（内部ラベル）">
         <div class="result-card">
           <h2 style="margin: 0; font-size: 20px;">アンケートへのご協力、ありがとうございました。</h2>
@@ -718,197 +714,218 @@
   </div>
 
   <script>
-    function computePeriodPhrase(ans) {
-      switch (ans.q10) {
-        case "初めて":
-          return "今回は初めて利用しました。";
-        case "３カ月未満":
-          return "通い始めてまだ数か月です。";
-        case "半年未満":
-          return "通い始めて半年程度です。";
-        case "１年未満":
-          return "通い始めて1年弱です。";
-        case "数年":
-          return "数年通っています。";
-        default:
-          return "";
-      }
-    }
-
-    function getSeoTerms(ans) {
-      const CANDIDATES = ["武蔵小杉", "カウンセリング", "WAIS-Ⅳ", "TEG3"];
-      const haystack = [
-        ...(ans.q1 ?? []),
-        ...(ans.q2 ?? []),
-        ans.q3 ?? "",
-        ans.q9 ?? "",
-      ].join("");
-      const found = CANDIDATES.filter((k) => haystack.includes(k));
-      for (let i = found.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [found[i], found[j]] = [found[j], found[i]];
-      }
-      return found;
-    }
-
-    function getDoctorName(ans) {
-      const known = ["渡辺", "笈川", "市毛", "森本"];
-
-      // 既知の担当者名がある場合は「先生」を付けて返す
-      if (known.includes(ans.q3)) return `${ans.q3}先生`;
-
-      // 自由記載がある場合
-      if (ans.q3 === "その他" && ans.q3_other && ans.q3_other.trim()) {
-        const trimmed = ans.q3_other.trim();
-
-        // 「担当医」と入力された場合は「先生」に置き換える
-        if (trimmed === "担当医") {
-          return "先生";
-        }
-        // 既に「先生」で終わっている場合はそのまま
-        if (trimmed.endsWith("先生")) {
-          return trimmed;
-        }
-        // それ以外の自由記入には「先生」を付ける
-        return `${trimmed}先生`;
-      }
-
-      // 氏名が不明な場合は「先生」を用いる
-      return "先生";
-    }
-
-    // ★ 問題になっていそうだった長いテンプレートリテラルをやめて、安全な行配列方式に変更
-    function buildSystemPrompt(ans) {
-      const clinic =
-        typeof appConfig !== "undefined" && appConfig.clinicName
-          ? appConfig.clinicName
-          : "当施設";
-      const periodPhrase = computePeriodPhrase(ans);
-      const seoTerms = getSeoTerms(ans);
-
-      const lines = [];
-
-      lines.push("あなたはカウンセリング施設のアンケート回答を自然な日本語の口コミ文に整えるアシスタントです。");
-      lines.push("- 事実ベースで誇張しない");
-      lines.push("- 一人称で丁寧な口調");
-      lines.push("- 1〜2段落で、全体はおよそ150字前後（改行は自然に）");
-      lines.push("- 絵文字・機種依存文字は使わない");
-      lines.push("- 「セッション」という語を避け、面談の様子と表記する");
-      lines.push("- 構成は時系列（利用のきっかけ→探した経緯→選んだ理由→面談の様子→良かった点→総合コメント）");
-      lines.push("- 「WAIS-Ⅳ」や「TEG3」など検査名、また「カウンセリング」が目的として選択されている場合は、症状が続いたという表現ではなく、検査やカウンセリングを受けるという自然な表現に置き換える");
-      lines.push(`- 一文目には必ず施設名「${clinic}」を含める（書き出しの文の形は自由）`);
-      lines.push("- 先生の表記は：名前が不明な場合は「先生」、それ以外は先生名をそのまま用いる");
-      lines.push("- 医師関連の表現を避ける（「医師」「担当医」「担当の医師」といった表現は使わず、「先生」または氏名＋「先生」の表記とする）");
-
-      if (periodPhrase) {
-        lines.push(`- 通所期間は次の文面を本文に必ず一度含める：「${periodPhrase}」`);
-      }
-
-      if (seoTerms.length) {
-        lines.push(
-          `- 次の語句は表記を変えず、不自然にならない位置に各1回程度入れる（順序は入れ替えてよい）：${seoTerms.join("、")}`
-        );
-      }
-
-      lines.push("- SEO語句を盛り込む際は「〜を中心に情報を探した」「〜を意識して」といった表現を使わず、自然な文脈で活用する");
-      lines.push("- 「良かった点」（q5）は不自然にならない範囲で反映する");
-
-      return lines.join("\n");
-    }
-
-    const appConfig = {
+    // 設定
+    var appConfig = {
       clinicName: "心のクリニック武蔵小杉",
       googleReviewUrl: "https://g.pagerCZZ6G6Jhb7YZEBMreview",
       ai: {
         mode: "endpoint",
         endpoint: "https://clinic-review.onrender.com/api/review",
-        headers: {},
-      },
+        headers: {}
+      }
     };
+
     (function () {
-      const isLocal = location.protocol === "file:";
+      var isLocal = location.protocol === "file:";
       appConfig.ai.mode = isLocal ? "mock" : "endpoint";
     })();
 
-    const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
-    const sanitizeInline = (text) => {
+    function computePeriodPhrase(ans) {
+      if (ans.q10 === "初めて") return "今回は初めて利用しました。";
+      if (ans.q10 === "３カ月未満") return "通い始めてまだ数か月です。";
+      if (ans.q10 === "半年未満") return "通い始めて半年程度です。";
+      if (ans.q10 === "１年未満") return "通い始めて1年弱です。";
+      if (ans.q10 === "数年") return "数年通っています。";
+      return "";
+    }
+
+    function getSeoTerms(ans) {
+      var CANDIDATES = ["武蔵小杉", "カウンセリング", "WAIS-Ⅳ", "TEG3"];
+      var haystack = ""
+        + (ans.q1 ? ans.q1.join("") : "")
+        + (ans.q2 ? ans.q2.join("") : "")
+        + (ans.q3 || "")
+        + (ans.q9 || "");
+      var found = [];
+      for (var i = 0; i < CANDIDATES.length; i++) {
+        if (haystack.indexOf(CANDIDATES[i]) !== -1) {
+          found.push(CANDIDATES[i]);
+        }
+      }
+      // シャッフル
+      for (var k = found.length - 1; k > 0; k--) {
+        var j = Math.floor(Math.random() * (k + 1));
+        var tmp = found[k];
+        found[k] = found[j];
+        found[j] = tmp;
+      }
+      return found;
+    }
+
+    function getDoctorName(ans) {
+      var known = ["渡辺", "笈川", "市毛", "森本"];
+      if (known.indexOf(ans.q3) !== -1) {
+        return ans.q3 + "先生";
+      }
+
+      // 自由記載
+      if (ans.q3 === "その他" && ans.q3_other && ans.q3_other.trim()) {
+        var trimmed = ans.q3_other.trim();
+        if (trimmed === "担当医") {
+          return "先生";
+        }
+        if (trimmed.slice(-2) === "先生") {
+          return trimmed;
+        }
+        return trimmed + "先生";
+      }
+
+      return "先生";
+    }
+
+    // 箇条書きではなく、シンプルな本文としてプロンプトを構成
+    function buildSystemPrompt(ans) {
+      var clinic = appConfig && appConfig.clinicName ? appConfig.clinicName : "当施設";
+      var periodPhrase = computePeriodPhrase(ans);
+      var seoTerms = getSeoTerms(ans);
+      var text = "";
+
+      text += "あなたはカウンセリング施設のアンケート回答を自然な日本語の口コミ文に整えるアシスタントです。\n";
+      text += "事実ベースで誇張せず、一人称の丁寧な口調で、1〜2段落・全体150字前後を目安に書いてください。\n";
+      text += "絵文字や機種依存文字は使わず、「セッション」という語は使わずに面談の様子と表現してください。\n";
+      text += "構成は、利用のきっかけ、施設を選んだ理由、面談の様子、良かった点、総合的なコメントの流れにしてください。\n";
+      text += "「WAIS-Ⅳ」「TEG3」などの検査名や「カウンセリング」が目的の場合は、症状が続いたという表現ではなく、検査やカウンセリングを受けるという表現にしてください。\n";
+      text += "一文目には必ず施設名「" + clinic + "」を含めてください。\n";
+      text += "先生の表記は、名前が不明な場合は「先生」、それ以外は氏名に「先生」を付けた形を使ってください。\n";
+      text += "「医師」「担当医」「担当の医師」といった言い方は使わないでください。\n";
+
+      if (periodPhrase) {
+        text += "通所期間を示す文として「" + periodPhrase + "」を本文中に一度含めてください。\n";
+      }
+
+      if (seoTerms.length > 0) {
+        text += "次の語句は表記を変えず、不自然にならない位置に各1回程度、自然な文脈で含めてください：";
+        text += seoTerms.join("、") + "。\n";
+      }
+
+      text += "アンケートの良かった点（q5）は、不自然にならない範囲で適切に反映してください。\n";
+
+      return text;
+    }
+
+    function $$(selector, root) {
+      if (!root) root = document;
+      return Array.prototype.slice.call(root.querySelectorAll(selector));
+    }
+
+    function sanitizeInline(text) {
       if (!text) return "";
       return String(text)
         .replace(/[\n\r]+/g, "、")
         .replace(/[ ]+/g, " ")
         .trim();
-    };
-    const getCheckedValues = (name) =>
-      $$("input[name='" + name + "']:checked").map((el) => el.value);
-    const listJa = (arr) =>
-      !arr
-        ? "—"
-        : !arr.length
-        ? "—"
-        : arr.length === 1
-        ? arr[0]
-        : arr.slice(0, -1).join("、") + "、" + arr[arr.length - 1];
-    const toggle = (el, show) => {
-      if (el) el.style.display = show ? "" : "none";
-    };
+    }
+
+    function getCheckedValues(name) {
+      var nodes = $$("input[name='" + name + "']:checked");
+      var vals = [];
+      for (var i = 0; i < nodes.length; i++) {
+        vals.push(nodes[i].value);
+      }
+      return vals;
+    }
+
+    function listJa(arr) {
+      if (!arr) return "—";
+      if (!arr.length) return "—";
+      if (arr.length === 1) return arr[0];
+      return arr.slice(0, -1).join("、") + "、" + arr[arr.length - 1];
+    }
+
+    function toggle(el, show) {
+      if (!el) return;
+      el.style.display = show ? "" : "none";
+    }
+
     function filterPositives(items) {
-      const positives = new Set([
-        "良く聞いてくれた",
-        "WEB予約が便利",
-        "Cashless決済が便利",
-        "駅近くで便利",
-        "TEG3の検査",
-        "WAIS-Ⅳの検査",
-        "カウンセリング",
-      ]);
-      return (items ?? []).filter((x) => positives.has(x));
+      var positives = {
+        "良く聞いてくれた": true,
+        "WEB予約が便利": true,
+        "Cashless決済が便利": true,
+        "駅近くで便利": true,
+        "TEG3の検査": true,
+        "WAIS-Ⅳの検査": true,
+        "カウンセリング": true
+      };
+      var result = [];
+      if (!items) return result;
+      for (var i = 0; i < items.length; i++) {
+        if (positives[items[i]]) result.push(items[i]);
+      }
+      return result;
     }
 
     function enforceLength(text, ans) {
       if (text == null) return text;
-      let t = String(text)
+      var t = String(text)
         .replace(/[ \t]+/g, " ")
         .replace(/\n{3,}/g, "\n\n")
         .trim();
-      const MIN = 180;
-      const MAX = 220;
-      const expandMap = {
-        良く聞いてくれた:
+      var MIN = 180;
+      var MAX = 220;
+
+      var expandMap = {
+        "良く聞いてくれた":
           "落ち着いて話せる雰囲気で、こちらのペースに合わせて進めてくださいました。些細な不安にも耳を傾けてくれて、納得いくまで相談できました。",
-        WEB予約が便利:
+        "WEB予約が便利":
           "WEB予約による手続きが簡単で、都合に合わせて利用しやすかったです。",
-        Cashless決済が便利:
+        "Cashless決済が便利":
           "キャッシュレス決済が使用でき、会計がスムーズで手間がかかりませんでした。",
-        駅近くで便利:
+        "駅近くで便利":
           "武蔵小杉駅が近いので、継続利用もしやすいと感じます。",
-        TEG3の検査: "TEG3の心理検査も受けられ、状態の理解が深まりました。",
-        WAIS-Ⅳの検査:
+        "TEG3の検査":
+          "TEG3の心理検査も受けられ、状態の理解が深まりました。",
+        "WAIS-Ⅳの検査":
           "WAIS-Ⅳの検査を通じて自分の特性を知ることができ、有意義でした。",
-        カウンセリング:
-          "カウンセリングが丁寧で、安心して話をすることができました。",
+        "カウンセリング":
+          "カウンセリングが丁寧で、安心して話をすることができました。"
       };
-      const plainLen = t.replace(/\n/g, "").length;
+
+      var plainLen = t.replace(/\n/g, "").length;
+
       if (plainLen > MAX) {
-        let cut = t.replace(/\n/g, "");
+        var cut = t.replace(/\n/g, "");
         if (cut.length > MAX) cut = cut.slice(0, MAX);
-        const lastPeriod = cut.lastIndexOf("。");
-        if (lastPeriod >= 0 && lastPeriod > MIN + 2) cut = cut.slice(0, lastPeriod + 1);
-        t = cut.endsWith("。") ? cut : cut + "。";
+        var lastPeriod = cut.lastIndexOf("。");
+        if (lastPeriod >= 0 && lastPeriod > MIN + 2) {
+          cut = cut.slice(0, lastPeriod + 1);
+        }
+        t = cut;
+        if (!t.endsWith("。")) t += "。";
         return t;
       }
+
       if (plainLen < MIN && ans) {
-        const reasons = (ans.q5 ?? []).filter((x) => Object.prototype.hasOwnProperty.call(expandMap, x));
-        for (const r of reasons) {
-          if (t.replace(/\n/g, "").length >= MIN) break;
-          const add = expandMap[r];
-          if (add && !t.includes(add)) t += (t.endsWith("。") ? "" : "。") + add;
+        var reasons = [];
+        var q5 = ans.q5 || [];
+        for (var key in expandMap) {
+          if (q5.indexOf(key) !== -1) {
+            reasons.push(key);
+          }
         }
-        const period = computePeriodPhrase(ans);
-        if (period && !t.includes(period) && t.replace(/\n/g, "").length < MIN) {
+        for (var i = 0; i < reasons.length; i++) {
+          if (t.replace(/\n/g, "").length >= MIN) break;
+          var add = expandMap[reasons[i]];
+          if (add && t.indexOf(add) === -1) {
+            t += (t.endsWith("。") ? "" : "。") + add;
+          }
+        }
+        var period = computePeriodPhrase(ans);
+        if (period && t.indexOf(period) === -1 && t.replace(/\n/g, "").length < MIN) {
           t += (t.endsWith("。") ? "" : "。") + period;
         }
-        const filler = "全体として落ち着いて利用でき、今後も安心して通えそうだと感じました。";
-        if (t.replace(/\n/g, "").length < MIN && !t.includes(filler)) {
+        var filler = "全体として落ち着いて利用でき、今後も安心して通えそうだと感じました。";
+        if (t.replace(/\n/g, "").length < MIN && t.indexOf(filler) === -1) {
           t += (t.endsWith("。") ? "" : "。") + filler;
         }
       }
@@ -916,386 +933,286 @@
     }
 
     function generateReviewLocally(ans) {
-      const deptList = ["カウンセリングルーム", "メンタルヘルスサービス", "心理相談室"];
-      const dept = deptList[Math.floor(Math.random() * deptList.length)];
+      var deptList = ["カウンセリングルーム", "メンタルヘルスサービス", "心理相談室"];
+      var dept = deptList[Math.floor(Math.random() * deptList.length)];
 
-      // 動機の文章を柔軟に生成する
-      let motive = "心身の不調が続いたため";
+      var motive = "心身の不調が続いたため";
       if (ans.q2 && ans.q2.length) {
-        const symptomsList = ["不眠", "不安", "抑うつ", "悩み相談"];
-        const testsList = ["WAIS-Ⅳ", "TEG3"];
-        const counselList = ["カウンセリング"];
-        const symptoms = ans.q2.filter((x) => symptomsList.includes(x));
-        const tests = ans.q2.filter((x) => testsList.includes(x));
-        const counsel = ans.q2.filter((x) => counselList.includes(x));
-        const parts = [];
-        if (symptoms.length) parts.push(`「${listJa(symptoms)}」が続き`);
-        if (tests.length) parts.push(`${listJa(tests)}の検査を受けるため`);
-        if (counsel.length) parts.push("カウンセリングを受けるため");
-        if (parts.length) {
-          motive = parts.join("、");
+        var symptomsList = ["不眠", "不安", "抑うつ", "悩み相談"];
+        var testsList = ["WAIS-Ⅳ", "TEG3"];
+        var counselList = ["カウンセリング"];
+        var symptoms = [];
+        var tests = [];
+        var counsel = [];
+        for (var i = 0; i < ans.q2.length; i++) {
+          var v = ans.q2[i];
+          if (symptomsList.indexOf(v) !== -1) symptoms.push(v);
+          if (testsList.indexOf(v) !== -1) tests.push(v);
+          if (counselList.indexOf(v) !== -1) counsel.push(v);
         }
+        var parts = [];
+        if (symptoms.length) parts.push("「" + listJa(symptoms) + "」が続き");
+        if (tests.length) parts.push(listJa(tests) + "の検査を受けるため");
+        if (counsel.length) parts.push("カウンセリングを受けるため");
+        if (parts.length) motive = parts.join("、");
       }
 
-      const chooseMap = {
-        武蔵小杉駅近く: "武蔵小杉駅から近かったこと",
-        自宅近く: "自宅から近かったこと",
-        当日予約: "当日予約ができたこと",
-        WEB予約: "WEB予約が便利だったこと",
-        土日開所: "土日も開所していること",
-        WAIS-Ⅳ: "WAIS-Ⅳの検査が受けられたこと",
-        TEG3: "TEG3の検査を受けられたこと",
-        カウンセリング: "カウンセリングを受けるため",
+      var chooseMap = {
+        "武蔵小杉駅近く": "武蔵小杉駅から近かったこと",
+        "自宅近く": "自宅から近かったこと",
+        "当日予約": "当日予約ができたこと",
+        "WEB予約": "WEB予約が便利だったこと",
+        "土日開所": "土日も開所していること",
+        "WAIS-Ⅳ": "WAIS-Ⅳの検査が受けられたこと",
+        "TEG3": "TEG3の検査を受けられたこと",
+        "カウンセリング": "カウンセリングを受けるため"
       };
-      const chosen = (ans.q1 ?? []).map((v) => chooseMap[v] ?? v);
-      let chooseText = "";
-      if (chosen.length) {
-        chooseText += `${listJa(chosen)}が決め手となり、`;
+      var chosenRaw = ans.q1 || [];
+      var chosen = [];
+      for (var c = 0; c < chosenRaw.length; c++) {
+        chosen.push(chooseMap[chosenRaw[c]] || chosenRaw[c]);
       }
-      const doctor = getDoctorName(ans);
-      const good = filterPositives(ans.q5);
-      const goodLine = good.length > 0 ? `特に「${listJa(good.slice(0, 3))}」と感じました。` : "";
-      const extra = sanitizeInline(ans.q9);
-      const closing = "予約から会計までの流れもスムーズで、安心して利用できました。";
-      const endingsRaw = [
+      var chooseText = "";
+      if (chosen.length) {
+        chooseText = listJa(chosen) + "が決め手となり、";
+      }
+
+      var doctor = getDoctorName(ans);
+      var good = filterPositives(ans.q5);
+      var goodLine = good.length ? "特に「" + listJa(good.slice(0, 3)) + "」と感じました。" : "";
+      var extra = sanitizeInline(ans.q9);
+      var closing = "予約から会計までの流れもスムーズで、安心して利用できました。";
+
+      var endingsRaw = [
         "こちらを利用しました",
         "コチラを利用しました",
         "心のクリニックを利用しました",
-        "心のクリニック武蔵小杉を利用しました",
+        "心のクリニック武蔵小杉を利用しました"
       ];
-      const endings = endingsRaw.map((s) => s.replace(/[。．.]+$/u, ""));
-      const ending = endings[Math.floor(Math.random() * endings.length)];
-      const periodPhrase = computePeriodPhrase(ans);
+      var endings = [];
+      for (var e = 0; e < endingsRaw.length; e++) {
+        endings.push(endingsRaw[e].replace(/[。．.]+$/u, ""));
+      }
+      var ending = endings[Math.floor(Math.random() * endings.length)];
+      var periodPhrase = computePeriodPhrase(ans);
 
-      const lines = [];
-      let first = `${motive}、${dept}を探し、${chooseText}${ending}。`;
+      var lines = [];
+      var first = motive + "、" + dept + "を探し、" + chooseText + ending + "。";
       if (periodPhrase) first += " " + periodPhrase;
       lines.push(first);
-
-      lines.push(
-        `${doctor}が話をよく聞いてくださり、状態や今後の方針も分かりやすく説明してくださいました。`,
-      );
+      lines.push(doctor + "が話をよく聞いてくださり、状態や今後の方針も分かりやすく説明してくださいました。");
       if (goodLine) lines.push(goodLine);
       lines.push(extra ? extra + closing : closing);
       lines.push("同じようなお悩みの方にも勧めたいと思います。");
       return lines.join("\n");
     }
 
-    async function generateReviewWithEndpoint(ans) {
-      try {
-        const res = await fetch(appConfig.ai.endpoint, {
+    function generateReviewWithEndpoint(ans) {
+      return new Promise(function (resolve) {
+        fetch(appConfig.ai.endpoint, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            ...appConfig.ai.headers,
-          },
-          body: JSON.stringify({ answers: ans, systemPrompt: buildSystemPrompt(ans) }),
-        });
-        if (!res.ok) throw new Error("bad status " + res.status);
-        const data = await res.json();
-        if (data && data.review) return data.review;
-        return generateReviewLocally(ans);
-      } catch (e) {
-        console.warn("AIエンドポイント呼出エラー", e);
-        return generateReviewLocally(ans);
-      }
+          headers: Object.assign({ "Content-Type": "application/json" }, appConfig.ai.headers || {}),
+          body: JSON.stringify({
+            answers: ans,
+            systemPrompt: buildSystemPrompt(ans)
+          })
+        })
+          .then(function (res) {
+            if (!res.ok) throw new Error("bad status " + res.status);
+            return res.json();
+          })
+          .then(function (data) {
+            if (data && data.review) {
+              resolve(data.review);
+            } else {
+              resolve(generateReviewLocally(ans));
+            }
+          })
+          .catch(function () {
+            resolve(generateReviewLocally(ans));
+          });
+      });
     }
 
-    async function generateReview(ans) {
-      if (appConfig.ai.mode === "endpoint" && appConfig.ai.endpoint)
+    function generateReview(ans) {
+      if (appConfig.ai.mode === "endpoint" && appConfig.ai.endpoint) {
         return generateReviewWithEndpoint(ans);
-      return generateReviewLocally(ans);
+      }
+      return Promise.resolve(generateReviewLocally(ans));
     }
 
     function collectAnswers(form) {
-      const q1 = getCheckedValues("q1");
-      if (q1.includes("その他")) {
-        const t = sanitizeInline(document.getElementById("q1_other").value);
-        if (t) q1[q1.indexOf("その他")] = t;
-        else q1.splice(q1.indexOf("その他"), 1);
+      var q1 = getCheckedValues("q1");
+      if (q1.indexOf("その他") !== -1) {
+        var t1 = sanitizeInline(document.getElementById("q1_other").value);
+        if (t1) {
+          q1[q1.indexOf("その他")] = t1;
+        } else {
+          q1.splice(q1.indexOf("その他"), 1);
+        }
       }
-      const q2 = getCheckedValues("q2");
-      if (q2.includes("その他")) {
-        const t = sanitizeInline(document.getElementById("q2_other").value);
-        if (t) q2[q2.indexOf("その他")] = t;
-        else q2.splice(q2.indexOf("その他"), 1);
+
+      var q2 = getCheckedValues("q2");
+      if (q2.indexOf("その他") !== -1) {
+        var t2 = sanitizeInline(document.getElementById("q2_other").value);
+        if (t2) {
+          q2[q2.indexOf("その他")] = t2;
+        } else {
+          q2.splice(q2.indexOf("その他"), 1);
+        }
       }
-      let q3 =
-        document.querySelector("input[name='q3']:checked")?.value ?? "";
+
+      var q3El = document.querySelector("input[name='q3']:checked");
+      var q3 = q3El ? q3El.value : "";
       if (q3 === "その他") {
-        const t = sanitizeInline(document.getElementById("q3_other").value);
-        q3 = t ?? "";
+        var t3 = sanitizeInline(document.getElementById("q3_other").value);
+        q3 = t3 || "";
       }
-      const q5 = getCheckedValues("q5");
-      if (q5.includes("その他")) {
-        const t = sanitizeInline(document.getElementById("q5_other").value);
-        if (t) q5[q5.indexOf("その他")] = t;
-        else q5.splice(q5.indexOf("その他"), 1);
+
+      var q5 = getCheckedValues("q5");
+      if (q5.indexOf("その他") !== -1) {
+        var t5 = sanitizeInline(document.getElementById("q5_other").value);
+        if (t5) {
+          q5[q5.indexOf("その他")] = t5;
+        } else {
+          q5.splice(q5.indexOf("その他"), 1);
+        }
       }
+
+      var q10El = document.querySelector("input[name='q10']:checked");
+      var q10 = q10El ? q10El.value : "";
+
+      var q3_other_input = document.getElementById("q3_other");
+      var q3_other_val = q3_other_input ? q3_other_input.value.trim() : "";
+
       return {
-        q1,
-        q2,
-        q3,
-        q5,
-        q10: document.querySelector("input[name='q10']:checked")?.value ?? "",
-        q9: document.getElementById("q9").value.trim(),
-        q3_other: document.getElementById("q3_other").value.trim() ?? "",
+        q1: q1,
+        q2: q2,
+        q3: q3,
+        q5: q5,
+        q10: q10,
+        q9: (document.getElementById("q9").value || "").trim(),
+        q3_other: q3_other_val
       };
     }
 
     function renderSummary(ans) {
-      const lines = [];
-      lines.push(
-        `通所の目的お困りごと: ${ans.q2.length ? listJa(ans.q2) : "—"}`,
-      );
-      lines.push(`選んだ経緯: ${ans.q1.length ? listJa(ans.q1) : "—"}`);
-      lines.push(`担当者: ${ans.q3 ?? "—"}`);
-      lines.push(`通所期間(Q5): ${ans.q10 ?? "—"}`);
-      lines.push(
-        `お勧めできる点(Q4): ${ans.q5.length ? listJa(ans.q5) : "—"}`,
-      );
-      if (ans.q9) lines.push(`自由記述(Q6): ${ans.q9}`);
+      var lines = [];
+      lines.push("通所の目的お困りごと: " + (ans.q2.length ? listJa(ans.q2) : "—"));
+      lines.push("選んだ経緯: " + (ans.q1.length ? listJa(ans.q1) : "—"));
+      lines.push("担当者: " + (ans.q3 || "—"));
+      lines.push("通所期間(Q5): " + (ans.q10 || "—"));
+      lines.push("お勧めできる点(Q4): " + (ans.q5.length ? listJa(ans.q5) : "—"));
+      if (ans.q9) {
+        lines.push("自由記述(Q6): " + ans.q9);
+      }
       document.getElementById("answerSummary").textContent = lines.join("\n");
     }
 
     function showView(id) {
-      document.querySelectorAll(".view").forEach((v) => v.classList.remove("active"));
-      document.getElementById(id).classList.add("active");
+      var views = document.querySelectorAll(".view");
+      for (var i = 0; i < views.length; i++) {
+        views[i].classList.remove("active");
+      }
+      var el = document.getElementById(id);
+      if (el) el.classList.add("active");
       try {
         history.pushState({ view: id }, "", "#" + id);
-      } catch {}
+      } catch (e) {}
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     function updateGoogleLink() {
-      const a = document.getElementById("googleLink");
-      if (a) a.href = appConfig.googleReviewUrl ?? "https://maps.google.com";
+      var a = document.getElementById("googleLink");
+      if (a) a.href = appConfig.googleReviewUrl || "https://maps.google.com";
     }
 
     function autosizeTextarea(ta) {
       if (!ta) return;
-      const max = Math.round(window.innerHeight * 0.60);
-      const min = Math.round(window.innerHeight * 0.36);
+      var max = Math.round(window.innerHeight * 0.60);
+      var min = Math.round(window.innerHeight * 0.36);
       ta.style.height = "auto";
-      const next = Math.max(min, Math.min(max, ta.scrollHeight));
+      var next = Math.max(min, Math.min(max, ta.scrollHeight));
       ta.style.height = next + "px";
     }
 
-    window.addEventListener("DOMContentLoaded", () => {
-      window.addEventListener("resize", () =>
-        autosizeTextarea(document.getElementById("reviewOutput")),
-      );
-      const bindOther = (name, wrapId) => {
-        document.querySelectorAll(`input[name='${name}']`).forEach((el) => {
-          el.addEventListener("change", () => {
-            const checked = getCheckedValues(name).includes("その他");
-            toggle(document.getElementById(wrapId), checked);
-          });
-        });
-      };
-      const bindRadioOther = (name, wrapId) => {
-        const wrap = document.getElementById(wrapId);
-        const update = () => {
-          const v =
-            document.querySelector(`input[name='${name}']:checked`)?.value ?? "";
-          if (wrap) wrap.style.display = v === "その他" ? "" : "none";
-        };
-        document.querySelectorAll(`input[name='${name}']`).forEach((el) => {
-          el.addEventListener("change", update);
-        });
-        update();
-      };
-      bindOther("q1", "q1_other_wrap");
-      bindOther("q2", "q2_other_wrap");
-      bindOther("q5", "q5_other_wrap");
-      bindRadioOther("q3", "q3_other_wrap");
-
-      (function () {
-        const syncGroup = (name) => {
-          document
-            .querySelectorAll(`input[name=${name}]`)
-            .forEach((x) => {
-              const lab = x.closest("label.chip");
-              if (lab) lab.classList.toggle("active", x.checked);
-            });
-        };
-        document.querySelectorAll("label.chip  input").forEach((inp) => {
-          const lab = inp.closest("label.chip");
-          if (lab) lab.classList.toggle("active", inp.checked);
-          inp.addEventListener("change", () => {
-            if (inp.type === "radio") {
-              syncGroup(inp.name);
-            } else {
-              if (lab) lab.classList.toggle("active", inp.checked);
-            }
-          });
-        });
-      })();
-
-      document.getElementById("surveyForm").addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const ans = collectAnswers(e.currentTarget);
-        renderSummary(ans);
-        if (typeof showLoading === "function") showLoading();
-        try {
-          let review = await (async () => {
-            if (
-              appConfig.ai &&
-              appConfig.ai.mode === "endpoint" &&
-              appConfig.ai.endpoint
-            ) {
-              try {
-                const res = await fetch(appConfig.ai.endpoint, {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                    ...(appConfig.ai.headers ?? {}),
-                  },
-                  body: JSON.stringify({
-                    answers: ans,
-                    systemPrompt: buildSystemPrompt(ans),
-                  }),
-                });
-                if (res.ok) {
-                  const data = await res.json();
-                  if (data && data.review) return data.review;
-                }
-              } catch {}
-            }
-            return generateReviewLocally(ans);
-          })();
-          review = enforceLength(review, ans);
-          const out = document.getElementById("reviewOutput");
-          out.value = review;
-          out.readOnly = false;
-          out.removeAttribute("readonly");
-          out.disabled = false;
-          out.style.pointerEvents = "auto";
-          out.style.caretColor = "#111827";
-          updateGoogleLink();
-          showView("view-positive");
-          if (typeof autosizeTextarea === "function") autosizeTextarea(out);
-          out.focus();
-        } catch (err) {
-          console.error(err);
-          showView("view-thanks");
-        } finally {
-          if (typeof hideLoading === "function") hideLoading();
-        }
-      });
-
-      document.getElementById("openBtn").addEventListener("click", () => {
-        const url = appConfig.googleReviewUrl ?? "https://maps.google.com";
-        const w = window.open(url, "_blank", "noopener");
-        if (!w) location.href = url;
-      });
-
-      document.getElementById("copyBtn").addEventListener("click", async () => {
-        try {
-          await navigator.clipboard.writeText(
-            document.getElementById("reviewOutput").value,
-          );
-          alert("投稿案をコピーしました。Googleの画面で貼り付けてご利用ください。");
-        } catch {
-          const ta = document.getElementById("reviewOutput");
-          ta.select();
-          document.execCommand("copy");
-          alert("投稿案をコピーしました。Googleの画面で貼り付けてご利用ください。");
-        }
-      });
-
-      document.getElementById("backBtn").addEventListener("click", () => {
-        try {
-          window.open("", "_self");
-        } catch {}
-        try {
-          window.close();
-        } catch {}
-        setTimeout(() => {
-          try {
-            location.href = "about:blank";
-          } catch {}
-        }, 80);
-      });
-
-      if (location.hash === "#view-positive") {
-        showView("view-positive");
-        autosizeTextarea(document.getElementById("reviewOutput"));
-      }
-      if (location.hash === "#view-thanks") showView("view-thanks");
-    });
-
+    // ローディング (window.showLoading / window.hideLoading)
     (function () {
-      let timer = null;
-      let drift = null;
-      let progress = 0;
-      const EXPECTED_MS = 11111;
-      const HOLD_AT = 90;
-      const DRIFT_MAX = 97;
-      const DRIFT_STEP = 1;
-      const DRIFT_INTERVAL = 900;
-      const overlay = () => document.getElementById("loadingOverlay");
-      const bar = () => document.getElementById("loadingBar");
-      const pct = () => document.getElementById("loadingPct");
-      const progEl = () => document.querySelector(".progress");
+      var timer = null;
+      var drift = null;
+      var progress = 0;
+      var EXPECTED_MS = 11111;
+      var HOLD_AT = 90;
+      var DRIFT_MAX = 97;
+      var DRIFT_STEP = 1;
+      var DRIFT_INTERVAL = 900;
+
+      function overlay() {
+        return document.getElementById("loadingOverlay");
+      }
+      function bar() {
+        return document.getElementById("loadingBar");
+      }
+      function pct() {
+        return document.getElementById("loadingPct");
+      }
+      function progEl() {
+        return document.querySelector(".progress");
+      }
       function updateAria(now) {
         try {
-          const p = progEl();
+          var p = progEl();
           if (p) p.setAttribute("aria-valuenow", String(now));
-        } catch {}
+        } catch (e) {}
       }
       function setProgress(v) {
         progress = Math.max(0, Math.min(100, Math.round(v)));
-        const b = bar();
+        var b = bar();
         if (!b) return;
         b.style.width = progress + "%";
-        const pctEl = pct();
+        var pctEl = pct();
         if (pctEl) pctEl.textContent = progress + "%";
         updateAria(progress);
       }
+
       window.showLoading = function () {
-        const ov = overlay();
+        var ov = overlay();
         if (!ov) return;
-        try {
-          if (timer) clearInterval(timer);
-        } catch {}
-        try {
-          if (drift) clearInterval(drift);
-        } catch {}
-        timer = drift = null;
+        if (timer) clearInterval(timer);
+        if (drift) clearInterval(drift);
+        timer = null;
+        drift = null;
         setProgress(0);
         ov.style.display = "flex";
         document.body.setAttribute("aria-busy", "true");
         document.body.style.pointerEvents = "none";
         document.body.style.touchAction = "none";
-        const start = (window.performance && performance.now) ? performance.now() : Date.now();
-        timer = setInterval(() => {
-          const now = (window.performance && performance.now) ? performance.now() : Date.now();
-          const elapsedMs = now - start;
-          const ideal = (elapsedMs / EXPECTED_MS) * 100;
-          const target = Math.min(HOLD_AT, Math.floor(ideal));
+        var start = (window.performance && performance.now) ? performance.now() : Date.now();
+        timer = setInterval(function () {
+          var now = (window.performance && performance.now) ? performance.now() : Date.now();
+          var elapsedMs = now - start;
+          var ideal = (elapsedMs / EXPECTED_MS) * 100;
+          var target = Math.min(HOLD_AT, Math.floor(ideal));
           if (target > progress) setProgress(target);
           if (progress >= HOLD_AT && !drift) {
             clearInterval(timer);
             timer = null;
-            drift = setInterval(() => {
+            drift = setInterval(function () {
               if (progress < DRIFT_MAX) setProgress(progress + DRIFT_STEP);
             }, DRIFT_INTERVAL);
           }
         }, 120);
       };
+
       window.hideLoading = function () {
-        const ov = overlay();
+        var ov = overlay();
         if (!ov) return;
-        try {
-          if (timer) clearInterval(timer);
-        } catch {}
-        try {
-          if (drift) clearInterval(drift);
-        } catch {}
-        timer = drift = null;
+        if (timer) clearInterval(timer);
+        if (drift) clearInterval(drift);
+        timer = null;
+        drift = null;
         setProgress(100);
-        setTimeout(() => {
+        setTimeout(function () {
           ov.style.display = "none";
           document.body.removeAttribute("aria-busy");
           document.body.style.pointerEvents = "";
@@ -1304,6 +1221,142 @@
         }, 220);
       };
     })();
+
+    // DOM 準備
+    window.addEventListener("DOMContentLoaded", function () {
+      window.addEventListener("resize", function () {
+        autosizeTextarea(document.getElementById("reviewOutput"));
+      });
+
+      function bindOther(name, wrapId) {
+        var inputs = document.querySelectorAll("input[name='" + name + "']");
+        for (var i = 0; i < inputs.length; i++) {
+          inputs[i].addEventListener("change", function () {
+            var checked = getCheckedValues(name).indexOf("その他") !== -1;
+            toggle(document.getElementById(wrapId), checked);
+          });
+        }
+      }
+
+      function bindRadioOther(name, wrapId) {
+        var wrap = document.getElementById(wrapId);
+        function update() {
+          var checked = document.querySelector("input[name='" + name + "']:checked");
+          var v = checked ? checked.value : "";
+          if (wrap) wrap.style.display = (v === "その他") ? "" : "none";
+        }
+        var inputs = document.querySelectorAll("input[name='" + name + "']");
+        for (var i = 0; i < inputs.length; i++) {
+          inputs[i].addEventListener("change", update);
+        }
+        update();
+      }
+
+      bindOther("q1", "q1_other_wrap");
+      bindOther("q2", "q2_other_wrap");
+      bindOther("q5", "q5_other_wrap");
+      bindRadioOther("q3", "q3_other_wrap");
+
+      (function () {
+        function syncGroup(name) {
+          var groupInputs = document.querySelectorAll("input[name='" + name + "']");
+          for (var i = 0; i < groupInputs.length; i++) {
+            var lab = groupInputs[i].closest("label.chip");
+            if (lab) lab.classList.toggle("active", groupInputs[i].checked);
+          }
+        }
+        var allInputs = document.querySelectorAll("label.chip input");
+        for (var j = 0; j < allInputs.length; j++) {
+          (function (inp) {
+            var lab = inp.closest("label.chip");
+            if (lab) lab.classList.toggle("active", inp.checked);
+            inp.addEventListener("change", function () {
+              if (inp.type === "radio") {
+                syncGroup(inp.name);
+              } else {
+                if (lab) lab.classList.toggle("active", inp.checked);
+              }
+            });
+          })(allInputs[j]);
+        }
+      })();
+
+      document.getElementById("surveyForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var ans = collectAnswers(e.currentTarget);
+        renderSummary(ans);
+        if (typeof showLoading === "function") showLoading();
+        generateReview(ans)
+          .then(function (review) {
+            review = enforceLength(review, ans);
+            var out = document.getElementById("reviewOutput");
+            out.value = review;
+            out.readOnly = false;
+            out.disabled = false;
+            out.style.pointerEvents = "auto";
+            out.style.caretColor = "#111827";
+            updateGoogleLink();
+            showView("view-positive");
+            autosizeTextarea(out);
+            out.focus();
+          })
+          .catch(function (err) {
+            console.error(err);
+            showView("view-thanks");
+          })
+          .finally(function () {
+            if (typeof hideLoading === "function") hideLoading();
+          });
+      });
+
+      document.getElementById("openBtn").addEventListener("click", function () {
+        var url = appConfig.googleReviewUrl || "https://maps.google.com";
+        var w = window.open(url, "_blank", "noopener");
+        if (!w) location.href = url;
+      });
+
+      document.getElementById("copyBtn").addEventListener("click", function () {
+        var ta = document.getElementById("reviewOutput");
+        var text = ta.value;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text)
+            .then(function () {
+              alert("投稿案をコピーしました。Googleの画面で貼り付けてご利用ください。");
+            })
+            .catch(function () {
+              ta.select();
+              document.execCommand("copy");
+              alert("投稿案をコピーしました。Googleの画面で貼り付けてご利用ください。");
+            });
+        } else {
+          ta.select();
+          document.execCommand("copy");
+          alert("投稿案をコピーしました。Googleの画面で貼り付けてご利用ください。");
+        }
+      });
+
+      document.getElementById("backBtn").addEventListener("click", function () {
+        try {
+          window.open("", "_self");
+        } catch (e) {}
+        try {
+          window.close();
+        } catch (e) {}
+        setTimeout(function () {
+          try {
+            location.href = "about:blank";
+          } catch (e) {}
+        }, 80);
+      });
+
+      if (location.hash === "#view-positive") {
+        showView("view-positive");
+        autosizeTextarea(document.getElementById("reviewOutput"));
+      }
+      if (location.hash === "#view-thanks") {
+        showView("view-thanks");
+      }
+    });
   </script>
 
   <div
