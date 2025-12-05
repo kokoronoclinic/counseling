@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="utf-8" />
@@ -730,7 +730,8 @@
       var seoTerms = getSeoTerms(ans);
       var text = "";
       text += "あなたはカウンセリング施設のアンケート回答を自然な日本語の口コミ文に整えるアシスタントです。\n";
-      text += "事実ベースで誇張せず、一人称の丁寧な口調で、1〜2段落・全体150字前後を目安に書いてください。\n";
+      // Aim for shorter reviews around 100–150 characters rather than ~150 characters.
+      text += "事実ベースで誇張せず、一人称の丁寧な口調で、1〜2段落・全体100〜150字前後を目安に書いてください。\n";
       text += "絵文字や機種依存文字は使わず、\"セッション\"という語は使わずに面談の様子と表現してください。\n";
       text += "構成は、利用のきっかけ、施設を選んだ理由、面談の様子、良かった点、総合的なコメントの流れにしてください。\n";
       text += "\"WAIS-Ⅳ\"や\"TEG3\"などの検査名や\"カウンセリング\"が目的の場合は、症状が続いたという表現ではなく、検査やカウンセリングを受けるという表現にしてください。\n";
@@ -786,8 +787,9 @@
     function enforceLength(text, ans) {
       if (text == null) return text;
       var t = String(text).replace(/[ \t]+/g, " ").replace(/\n{3,}/g, "\n\n").trim();
-      var MIN = 180;
-      var MAX = 220;
+      // Adjust desired length range to 100–150 characters to produce shorter reviews.
+      var MIN = 100;
+      var MAX = 150;
       var expandMap = {
         "良く聞いてくれた": "落ち着いて話せる雰囲気で、こちらのペースに合わせて進めてくださいました。些細な不安にも耳を傾けてくれて、納得いくまで相談できました。",
         "WEB予約が便利": "WEB予約による手続きが簡単で、都合に合わせて利用しやすかったです。",
