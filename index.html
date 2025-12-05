@@ -95,6 +95,12 @@
       flex-wrap: wrap;
       gap: 10px 12px;
     }
+
+    /* Ensure free-text "その他" areas span the full width under the row */
+    .row .group {
+      flex-basis: 100%;
+      width: 100%;
+    }
     .chip {
       display: inline-flex;
       align-items: center;
@@ -313,6 +319,20 @@
       #q5_fieldset .row {
         grid-template-columns: repeat(4, minmax(0, 1fr));
       }
+    }
+
+    /*
+      When a free-text input ("その他" entry) appears in the Q4 section, we want
+      the textarea to stretch across the full width of the grid.  By default
+      the Q4 row uses CSS Grid to lay out its chips in multiple columns, so
+      simply using flex-basis on the group doesn’t help.  Explicitly set
+      the group container to span all grid columns and take up 100% of the
+      available width so the textarea appears beneath the options and fills
+      the entire row.
+    */
+    #q5_fieldset .row .group {
+      grid-column: 1 / -1;
+      width: 100%;
     }
     .lead-center {
       text-align: center;
