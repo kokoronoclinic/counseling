@@ -1,4 +1,4 @@
-<DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="utf-8" />
@@ -800,14 +800,19 @@
         "カウンセリング": "カウンセリングが丁寧で、安心して話をすることができました。"
       };
       var plainLen = t.replace(/\n/g, "").length;
+      // When the review text exceeds the maximum allowed length, truncate it.
       if (plainLen > MAX) {
+        // Remove any newlines and slice to the maximum length.
         var cut = t.replace(/\n/g, "");
         if (cut.length > MAX) cut = cut.slice(0, MAX);
+        // If there is a full stop (。) within the sliced text after the minimum threshold,
+        // we attempt to end the sentence there. This helps avoid cutting mid-sentence.
         var lastPeriod = cut.lastIndexOf("。");
-        if (lastPeriod >= 0 && lastPeriod > MIN + 2) {
+        if (lastPeriod >= MIN + 2 && lastPeriod < cut.length) {
           cut = cut.slice(0, lastPeriod + 1);
         }
         t = cut;
+        // Ensure the truncated text ends with a Japanese full stop.
         if (!t.endsWith("。")) t += "。";
         return t;
       }
