@@ -486,6 +486,10 @@
               <label class="chip">
                 <input type="checkbox" name="q2" value="WAIS-Ⅳ" />
                 WAIS-Ⅳ
+                 </label>
+              <label class="chip">
+                <input type="checkbox" name="q2" value="WISC-Ⅴ" />
+                WISC-Ⅴ
               </label>
               <label class="chip">
                 <input type="checkbox" name="q2" value="TEG3" />
@@ -548,10 +552,7 @@
               <label class="chip">
                 <input type="radio" name="q3" value="市毛" />
                 市毛
-              </label>
-              <label class="chip">
-                <input type="radio" name="q3" value="森本" />
-                森本
+            
               </label>
               <label class="chip">
                 <input type="radio" name="q3" value="その他" />
@@ -696,7 +697,7 @@
       return "";
     }
     function getSeoTerms(ans) {
-      var CANDIDATES = ["武蔵小杉", "カウンセリング", "WAIS-Ⅳ", "TEG3"];
+      var CANDIDATES = ["武蔵小杉", "カウンセリング", "WAIS-Ⅳ", "WISC-Ⅴ", "TEG3"];
       var haystack = "" + (ans.q1 ? ans.q1.join("") : "") + (ans.q2 ? ans.q2.join("") : "") + (ans.q3 || "") + (ans.q9 || "");
       var found = [];
       for (var i = 0; i < CANDIDATES.length; i++) {
@@ -713,7 +714,7 @@
       return found;
     }
     function getDoctorName(ans) {
-      var known = ["渡辺", "笈川", "市毛", "森本"];
+      var known = ["渡辺", "笈川", "市毛"];
       if (known.indexOf(ans.q3) !== -1) {
         return ans.q3 + "先生";
       }
@@ -735,7 +736,7 @@
       text += "事実ベースで誇張せず、一人称の丁寧な口調で、1〜2段落・全体100〜150字前後を目安に書いてください。\n";
       text += "絵文字や機種依存文字は使わず、\"セッション\"という語は使わずに面談の様子と表現してください。\n";
       text += "構成は、利用のきっかけ、施設を選んだ理由、面談の様子、良かった点、総合的なコメントの流れにしてください。\n";
-      text += "\"WAIS-Ⅳ\"や\"TEG3\"などの検査名や\"カウンセリング\"が目的の場合は、症状が続いたという表現ではなく、検査やカウンセリングを受けるという表現にしてください。\n";
+      text += "\"WAIS-Ⅳ\"や\"WISC-Ⅴ\"、\"TEG3\"などの検査名や\"カウンセリング\"が目的の場合は、症状が続いたという表現ではなく、検査やカウンセリングを受けるという表現にしてください。\n";
       text += "一文目には必ず施設名\"" + clinic + "\"を含めてください。\n";
       text += "先生の表記は、名前が不明な場合は\"先生\"、それ以外は氏名に\"先生\"を付けた形を使ってください。\n";
       text += "\"医師\"\"担当医\"\"担当の医師\"といった言い方は使わないでください。\n";
@@ -776,6 +777,7 @@
         "駅近くで便利": true,
         "TEG3の検査": true,
         "WAIS-Ⅳの検査": true,
+        "WISC-Ⅴの検査": true,
         "カウンセリング": true
       };
       var result = [];
@@ -798,6 +800,7 @@
         "駅近くで便利": "武蔵小杉駅が近いので、継続利用もしやすいと感じます。",
         "TEG3の検査": "TEG3の心理検査も受けられ、状態の理解が深まりました。",
         "WAIS-Ⅳの検査": "WAIS-Ⅳの検査を通じて自分の特性を知ることができ、有意義でした。",
+         "WISC-Ⅴの検査": "WAIS-Ⅳの検査を通じて特性を知ることができ、有意義でした。",
         "カウンセリング": "カウンセリングが丁寧で、安心して話をすることができました。"
       };
       var plainLen = t.replace(/\n/g, "").length;
@@ -847,7 +850,7 @@
       var motive = "心身の不調が続いたため";
       if (ans.q2 && ans.q2.length) {
         var symptomsList = ["不眠", "不安", "抑うつ", "悩み相談"];
-        var testsList = ["WAIS-Ⅳ", "TEG3"];
+        var testsList = ["WAIS-Ⅳ","WISC-Ⅴ", "TEG3"];
         var counselList = ["カウンセリング"];
         var symptoms = [];
         var tests = [];
@@ -870,6 +873,7 @@
         "WEB予約": "WEB予約が便利だったこと",
         "土日開所": "土日も開所していること",
         "WAIS-Ⅳ": "WAIS-Ⅳの検査が受けられたこと",
+        "WISC-Ⅴ": "WISC-Ⅴの検査が受けられたこと",
         "TEG3": "TEG3の検査を受けられたこと",
         "カウンセリング": "カウンセリングを受けるため"
       };
