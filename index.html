@@ -544,6 +544,11 @@
               <label class="chip">
                 <input type="radio" name="q3" value="渡辺" />
                 渡辺
+                </label>
+              <label class="chip">
+                <input type="radio" name="q3" value="晴山" />
+                晴山
+              </label>
               </label>
               <label class="chip">
                 <input type="radio" name="q3" value="笈川" />
@@ -714,7 +719,7 @@
       return found;
     }
     function getDoctorName(ans) {
-      var known = ["渡辺", "笈川", "市毛"];
+      var known = ["渡辺", "晴山", "笈川", "市毛"];
       if (known.indexOf(ans.q3) !== -1) {
         return ans.q3 + "先生";
       }
